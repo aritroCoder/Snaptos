@@ -15,6 +15,7 @@ import {
   getSnap,
   isLocalSnap,
   sendHello,
+  sendGetKeyPair,
   shouldDisplayReconnectButton,
 } from '../utils';
 
@@ -133,6 +134,15 @@ const Index = () => {
     }
   };
 
+  const handleSendGetKeyPair = async () => {
+    try {
+      await sendGetKeyPair();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+    }
+  };
+
   return (
     <Container>
       <Heading>
@@ -198,6 +208,25 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleSendHelloClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'Get key pair',
+            description:
+              'Display a custom message within a confirmation screen in MetaMask.',
+            button: (
+              <SendHelloButton
+                onClick={handleSendGetKeyPair}
                 disabled={!state.installedSnap}
               />
             ),

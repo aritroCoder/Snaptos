@@ -27,6 +27,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@metamask/key-tree": "^9.0.0",
     "@metamask/snaps-types": "^3.0.1",
     "@metamask/snaps-ui": "^3.0.1",
     "buffer": "^6.0.3"

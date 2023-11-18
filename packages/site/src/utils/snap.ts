@@ -64,4 +64,20 @@ export const sendHello = async () => {
   });
 };
 
+/**
+ * Invoke the "getKeyPair" method from the example snap.
+ */
+export const sendGetKeyPair = async () => {
+  const keypair = await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'getKeyPair',
+      },
+    },
+  });
+  console.log('Keypair', keypair);
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
