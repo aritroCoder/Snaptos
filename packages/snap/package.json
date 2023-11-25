@@ -27,6 +27,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@aptos-labs/ts-sdk": "experimental",
     "@metamask/key-tree": "^9.0.0",
     "@metamask/snaps-types": "^3.0.1",
     "@metamask/snaps-ui": "^3.0.1",

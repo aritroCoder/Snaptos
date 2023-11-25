@@ -1,6 +1,7 @@
-import { SLIP10Node } from '@metamask/key-tree';
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, text } from '@metamask/snaps-ui';
+
+import { getAptosEntropy } from './utils/aptos/GenKeyPair';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -41,16 +42,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
       break;
     case 'getKeyPair': {
-      const rootNode = await snap.request({
-        method: 'snap_getBip32Entropy',
-        params: {
-          path: [`m`, `44'`, `637'`],
-          curve: 'ed25519',
-        },
-      });
-      const node = await SLIP10Node.fromJSON(rootNode);
-      const keyPair = await node.derive([`slip10:0'`]);
-      return { keyPair };
+      const keypair = await getAptosEntropy();
+      return { keypair };
       break;
     }
     default:
