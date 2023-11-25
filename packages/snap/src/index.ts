@@ -1,7 +1,7 @@
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, text } from '@metamask/snaps-ui';
 
-import { getAptosEntropy } from './utils/aptos/GenKeyPair';
+import createAccount from './utils/aptos/CreateAccount';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -41,9 +41,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         },
       });
       break;
-    case 'getKeyPair': {
-      const keypair = await getAptosEntropy();
-      return { keypair };
+    case 'getAccount': {
+      const accountDetails = await createAccount();
+      return { accountDetails };
       break;
     }
     default:

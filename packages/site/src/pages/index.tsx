@@ -15,7 +15,7 @@ import {
   getSnap,
   isLocalSnap,
   sendHello,
-  sendGetKeyPair,
+  sendGetAccount,
   shouldDisplayReconnectButton,
 } from '../utils';
 
@@ -134,9 +134,9 @@ const Index = () => {
     }
   };
 
-  const handleSendGetKeyPair = async () => {
+  const handleSendGetAccount = async () => {
     try {
-      await sendGetKeyPair();
+      await sendGetAccount();
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -221,12 +221,12 @@ const Index = () => {
         />
         <Card
           content={{
-            title: 'Get key pair',
+            title: 'Create Aptos Account',
             description:
               'Display a custom message within a confirmation screen in MetaMask.',
             button: (
               <SendHelloButton
-                onClick={handleSendGetKeyPair}
+                onClick={handleSendGetAccount}
                 disabled={!state.installedSnap}
               />
             ),

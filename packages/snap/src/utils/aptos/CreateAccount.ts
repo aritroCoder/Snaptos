@@ -19,8 +19,14 @@ export default async function createAccount(): {
   }
   const privateKey = new Ed25519PrivateKey(keypair.privateKey);
   const account = Account.fromPrivateKey({ privateKey });
+  console.log(
+    'Created account with private key: ',
+    keypair.privateKey,
+    '\nAccout is: ',
+    account,
+  );
   const txn = await aptos.fundAccount({
-    accountAddress: account.address,
+    accountAddress: account.accountAddress,
     amount: 1,
   });
   return { transactionHash: txn, accountAddress: account.accountAddress };
