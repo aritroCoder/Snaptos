@@ -1,6 +1,8 @@
-import { Account, Aptos, Ed25519PrivateKey } from '@aptos-labs/ts-sdk';
+import { Account, AccountAddress, Ed25519PrivateKey } from '@aptos-labs/ts-sdk';
 
 import { getAptosEntropy } from './GenKeyPair';
+
+const HOST = 'http://localhost:5500';
 
 /**
  * Create an account on the APTOS protocol.
@@ -8,11 +10,10 @@ import { getAptosEntropy } from './GenKeyPair';
  * @returns { transactionHash, accountAddress } The transaction hash and account accountAddress.
  * @throws {Error} If the account could not be created.
  */
-export default async function createAccount(): {
-  transactionHash: string;
+export default async function createAccount(): Promise<{
+  transactionHash: any;
   accountAddress: string;
-} {
-  const aptos = new Aptos();
+}> {
   const keypair = await getAptosEntropy();
   if (!keypair.privateKey) {
     throw new Error('No private key found');
@@ -20,14 +21,23 @@ export default async function createAccount(): {
   const privateKey = new Ed25519PrivateKey(keypair.privateKey);
   const account = Account.fromPrivateKey({ privateKey });
   console.log(
-    'Created account with private key: ',
+    'Created new account with private key: ',
     keypair.privateKey,
     '\nAccout is: ',
     account,
   );
-  const txn = await aptos.fundAccount({
-    accountAddress: account.accountAddress,
-    amount: 1,
+  const txn = await fetch(`${HOST}/createAccount`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      address: account.accountAddress,
+      amt: 20000000,
+    }),
   });
-  return { transactionHash: txn, accountAddress: account.accountAddress };
+  return {
+    transactionHash: txn,
+    accountAddress: account.accountAddress.toString(),
+  };
 }

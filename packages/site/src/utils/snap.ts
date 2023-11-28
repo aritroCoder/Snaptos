@@ -68,7 +68,7 @@ export const sendHello = async () => {
  * Invoke the "getAccount" method from the example snap.
  */
 export const sendGetAccount = async () => {
-  await window.ethereum.request({
+  const accountData = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -77,6 +77,7 @@ export const sendGetAccount = async () => {
       },
     },
   });
+  console.log('this is accountData', accountData);
 };
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

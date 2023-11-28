@@ -5,22 +5,29 @@ import { createAccount } from './src/CreateAccount';
 import { doTransaction } from './src/Transaction';
 
 const app = express();
+const PORT = 5500;
 
 app.use(express.json());
 app.use(cors<Request>());
 
-app.post('/createAccount', async (req: Request, res: Response) => {
-  res.json(await createAccount(req.body));
+app.post('/createAccount', (req: Request, res: Response) => {
+  createAccount(req.body).then((tx) => {
+    console.log('this is tx one more time', tx);
+    res.json({ tx });
+  });
 });
 
-app.post('/doTransaction', async (req: Request, res: Response) => {
-  res.json(await doTransaction(req.body));
+app.post('/doTransaction', (req: Request, res: Response) => {
+  doTransaction(req.body).then((tx) => {
+    console.log('this is tx one more time', tx);
+    res.json({ tx });
+  });
 });
 
 app.post('/getBalance', async (req: Request, res: Response) => {
   res.json(await checkBalance(req.body));
 });
 
-app.listen(3000, () => {
-  console.log(`Server is running on port 3000`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
