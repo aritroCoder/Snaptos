@@ -4,6 +4,7 @@ build/
 coverage/
 .cache/
 public/
+server/node_modules/
 
 # Logs
 logs
