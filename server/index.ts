@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import checkBalance from './src/CheckBalance';
 import { createAccount } from './src/CreateAccount';
+import { genTxn } from './src/GenTxn';
 import { doTransaction } from './src/Transaction';
 
 const app = express();
@@ -23,6 +24,12 @@ app.post('/doTransaction', (req: Request, res: Response) => {
     res.json({ tx });
   });
 });
+
+// app.post('/gettx', (req: Request, res: Response) => {
+//   genTxn(req.body).then((tx) => {
+//     res.json({ tx });
+//   });
+// });
 
 app.post('/getBalance', async (req: Request, res: Response) => {
   res.json(await checkBalance(req.body));
