@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import {
@@ -17,6 +17,7 @@ import {
   sendHello,
   sendGetAccount,
   shouldDisplayReconnectButton,
+  sendCoin,
 } from '../utils';
 
 const Container = styled.div`
@@ -105,6 +106,8 @@ const ErrorMessage = styled.div`
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
+  const [transferAmount, setTransferAmount] = useState(0);
+  const [reciever, setReciever] = useState('');
 
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? state.isFlask
@@ -137,6 +140,15 @@ const Index = () => {
   const handleSendGetAccount = async () => {
     try {
       await sendGetAccount();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+    }
+  };
+
+  const handleCoinTransfer = async () => {
+    try {
+      await sendCoin(reciever, transferAmount);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -227,6 +239,36 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleSendGetAccount}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Reciever"
+          onChange={(e) => setReciever(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Amount"
+          onChange={(e) => setTransferAmount(parseInt(e.target.value))}
+        />
+        <Card
+          content={{
+            title: 'Transfer Coin',
+            description:
+              'Display a custom message within a confirmation screen in MetaMask.',
+            button: (
+              <SendHelloButton
+                onClick={handleCoinTransfer}
                 disabled={!state.installedSnap}
               />
             ),

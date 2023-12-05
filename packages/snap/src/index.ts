@@ -2,6 +2,7 @@ import type { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, text } from '@metamask/snaps-ui';
 
 import createAccount from './utils/aptos/CreateAccount';
+import transferCoin from './utils/aptos/TransferCoin';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -44,6 +45,13 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     case 'getAccount': {
       const accountDetails = await createAccount();
       return { accountDetails };
+      break;
+    }
+    case 'transferCoin': {
+      const { to, amount } = request.params;
+      console.log('this is to', to);
+      const txHash = await transferCoin(to, amount);
+      return { txHash };
       break;
     }
     default:
