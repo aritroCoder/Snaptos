@@ -1,7 +1,7 @@
 import { AccountAddress, Aptos } from '@aptos-labs/ts-sdk';
 
 type Request = {
-  address: AccountAddress;
+  address: string;
   amt: number;
 };
 
