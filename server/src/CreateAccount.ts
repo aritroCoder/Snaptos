@@ -12,6 +12,7 @@ type Request = {
  * @throws {Error} If the account could not be created.
  */
 export async function createAccount(request: Request) {
+  console.log("yes")
   const aptos = new Aptos();
 
   const requestBody: Request = request;
@@ -19,14 +20,8 @@ export async function createAccount(request: Request) {
   console.log('this is request body', requestBody);
   console.log(typeof requestBody.address);
 
-  const dataArray: Uint8Array = new Uint8Array(
-    Object.values(requestBody.address.data),
-  );
-
-  console.log(dataArray);
-
   const txn = await aptos.fundAccount({
-    accountAddress: dataArray,
+    accountAddress: requestBody.address,
     amount: requestBody.amt,
     options: {
       indexerVersionCheck: false,
