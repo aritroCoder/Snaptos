@@ -32,10 +32,11 @@ export default async function createAccount(): Promise<{
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      address: account.accountAddress,
-      amt: 20000000,
+      address: account.accountAddress.toString(),
+      amt: 20000000
     }),
-  });
+  })
+  .then(res => res.json())
   return {
     transactionHash: txn,
     accountAddress: account.accountAddress.toString(),
