@@ -1,9 +1,30 @@
 import { Account,Aptos,Ed25519PrivateKey } from "@aptos-labs/ts-sdk";
+import * as aes256 from 'aes256';
 
   type Request = {
     pk: string;
     recipient: string;
     amount: number;
+  }
+
+//   function encryptPhrase(phrase: string, key: string): string {
+//     const cipher = aes256.createCipher(key);
+  
+//     if (typeof phrase === 'string') {
+//       return cipher.encrypt(phrase);
+//     } else {
+//       throw new Error('Invalid');
+//     }
+//   }
+
+  function decryptPhrase(encryptedPhrase: string, key: string): string {
+    const cipher = aes256.createCipher(key);
+  
+    if (typeof encryptedPhrase === 'string') {
+      return cipher.decrypt(encryptedPhrase);
+    } else {
+      throw new Error('Invalid');
+    }
   }
   
 
@@ -15,9 +36,11 @@ export async function privateKeyTxn(request:Request) {
 
     const requestBody: Request = request;
     const { recipient, pk, amount } = requestBody;
-  
-    // const pk = "0x4be5a633898eb5040519eab1494309f6966d977613d25500784b034a41f377a4";
-    const privateKey = new Ed25519PrivateKey(pk);
+    const key = 'key';
+    const decryptedKey: string = decryptPhrase(pk, key);
+    console.log('Encrypted Text:', decryptedKey);
+
+    const privateKey = new Ed25519PrivateKey(decryptedKey);
     const account = Account.fromPrivateKey({ privateKey: privateKey });
 
     const txn = await aptos.transferCoinTransaction({
