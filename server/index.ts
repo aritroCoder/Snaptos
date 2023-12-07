@@ -4,8 +4,12 @@ import checkBalance from './src/CheckBalance';
 import { createAccount } from './src/CreateAccount';
 import { doTransaction } from './src/Transaction';
 import { privateKeyTxn } from './src/privateKeyTxn';
+<<<<<<< HEAD
 import { getTxn } from './src/GetTxn';
 import { genTxn } from './src/GenTxn';
+=======
+import { fundMe } from './src/Faucet';
+>>>>>>> 121203cfc7d0f4363eeb5e76f664dea69d927164
 
 const app = express();
 const PORT = 5500;
@@ -49,6 +53,10 @@ app.post('/getTxn', async (req: Request, res: Response) => {
 
 app.post('/genTxn', async (req: Request, res: Response) => {
   res.json(await genTxn(req.body));
+app.post('/fundMe', async (req: Request, res: Response) => {
+  fundMe(req.body).then((tx) => {
+    res.json({ tx });
+  });
 });
 
 app.listen(PORT, () => {
