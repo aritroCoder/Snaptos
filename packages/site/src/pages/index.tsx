@@ -18,6 +18,7 @@ import {
   sendGetAccount,
   shouldDisplayReconnectButton,
   sendCoin,
+  sendFundMe,
 } from '../utils';
 
 const Container = styled.div`
@@ -155,6 +156,16 @@ const Index = () => {
     }
   };
 
+  const handleFundMeWithFaucet = async () => {
+    try {
+      await sendFundMe();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+
+    }
+  };
+
   return (
     <Container>
       <Heading>
@@ -250,6 +261,7 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
+        <button onClick={handleFundMeWithFaucet}>Fund Me with Faucet</button>
 
         <input
           type="text"
