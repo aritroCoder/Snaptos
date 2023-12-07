@@ -19,6 +19,7 @@ import {
   shouldDisplayReconnectButton,
   sendCoin,
   sendFundMe,
+  sendTxnHistory
 } from '../utils';
 
 const Container = styled.div`
@@ -166,6 +167,16 @@ const Index = () => {
     }
   };
 
+  const handleGetAllTransactions = async () => {
+    try {
+      await sendTxnHistory();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+
+    }
+  }
+
   return (
     <Container>
       <Heading>
@@ -262,6 +273,7 @@ const Index = () => {
           }
         />
         <button onClick={handleFundMeWithFaucet}>Fund Me with Faucet</button>
+        <button onClick={handleGetAllTransactions}>Get All Transactions</button>
 
         <input
           type="text"

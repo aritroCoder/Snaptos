@@ -4,6 +4,7 @@ import { panel, text } from '@metamask/snaps-ui';
 import createAccount from './utils/aptos/CreateAccount';
 import transferCoin from './utils/aptos/TransferCoin';
 import { fundMe } from './utils/aptos/Faucets';
+import { getAllTxn } from './utils/aptos/GetAllTxn';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -56,12 +57,16 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       break;
     }
     case 'fundMe': {
-      // const { address } = request.params;
-      // console.log('this is address', address);
       const txHash = await fundMe();
       return { txHash };
       break;
     }
+    case 'txnHistory': {
+      const txnHistory = await getAllTxn();
+      return { txnHistory };
+      break;
+    }
+
     default:
       throw new Error('Method not found.');
   }
