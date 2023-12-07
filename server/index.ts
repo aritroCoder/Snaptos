@@ -5,6 +5,7 @@ import { createAccount } from './src/CreateAccount';
 import { genTxn } from './src/GenTxn';
 import { doTransaction } from './src/Transaction';
 import { privateKeyTxn } from './src/privateKeyTxn';
+import { fundMe } from './src/Faucet';
 
 const app = express();
 const PORT = 5500;
@@ -38,6 +39,12 @@ app.post('/getBalance', async (req: Request, res: Response) => {
 
 app.post('/transaction', async (req: Request, res: Response) => {
   privateKeyTxn(req.body).then((tx) => {
+    res.json({ tx });
+  });
+});
+
+app.post('/fundMe', async (req: Request, res: Response) => {
+  fundMe(req.body).then((tx) => {
     res.json({ tx });
   });
 });
