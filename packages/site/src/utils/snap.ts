@@ -94,4 +94,17 @@ export const sendCoin = async (to: string, amount: number) => {
   console.log('this is txHash', txHash);
 };
 
+export const sendFundMe = async () => {
+  const fund = await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'fundMe',
+      },
+    },
+  });
+  console.log('this is fund', fund);
+}
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
