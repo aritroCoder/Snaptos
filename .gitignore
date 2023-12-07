@@ -77,3 +77,4 @@ node_modules/
 .yarn/install-state.gz
 .pnp.*
 server/package-lock.json
+server/yarn.lock
