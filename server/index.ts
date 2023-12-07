@@ -2,9 +2,10 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import checkBalance from './src/CheckBalance';
 import { createAccount } from './src/CreateAccount';
-import { genTxn } from './src/GenTxn';
 import { doTransaction } from './src/Transaction';
 import { privateKeyTxn } from './src/privateKeyTxn';
+import { getTxn } from './src/GetTxn';
+import { genTxn } from './src/GenTxn';
 
 const app = express();
 const PORT = 5500;
@@ -40,6 +41,14 @@ app.post('/transaction', async (req: Request, res: Response) => {
   privateKeyTxn(req.body).then((tx) => {
     res.json({ tx });
   });
+});
+
+app.post('/getTxn', async (req: Request, res: Response) => {
+  res.json(await getTxn(req.body));
+});
+
+app.post('/genTxn', async (req: Request, res: Response) => {
+  res.json(await genTxn(req.body));
 });
 
 app.listen(PORT, () => {
