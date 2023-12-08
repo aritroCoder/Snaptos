@@ -78,4 +78,5 @@ node_modules/
 .pnp.*
 server/package-lock.json
 server/yarn.lock
+yarn.lock
 server/.yarn/

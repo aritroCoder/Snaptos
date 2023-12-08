@@ -1,9 +1,11 @@
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { panel, text } from '@metamask/snaps-ui';
+import { heading, panel, text } from '@metamask/snaps-ui';
 
 import createAccount from './utils/aptos/CreateAccount';
 import transferCoin from './utils/aptos/TransferCoin';
 import { fundMe } from './utils/aptos/Faucets';
+import { getAllTxn } from './utils/aptos/GetAllTxn';
+import { getBal } from './utils/aptos/GetBal';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -24,7 +26,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin: string;
   request: {
     method: string;
-    params: any;
+    params: {
+      to: string;
+      amount: number;
+    };
   };
 }) => {
   switch (request.method) {
@@ -44,22 +49,79 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
       break;
     case 'getAccount': {
-      const accountDetails = await createAccount();
-      return { accountDetails };
+      const accountDetails: {
+        accountAddress: string;
+        transactionHash: string;
+        balance: number;
+      } = await createAccount();
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'alert',
+          content: panel([
+            heading('Account Details'),
+            text(`Address: **${accountDetails.accountAddress}**`),
+          ]),
+        },
+      });
+      return  {address : accountDetails.accountAddress, bal : accountDetails.balance} ;
       break;
     }
     case 'transferCoin': {
       const { to, amount } = request.params;
-      console.log('this is to', to);
+      const result = await snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'confirmation',
+          content: panel([
+            heading('Transfer Coin'),
+            text(`To: **${to}**`),
+            text(`Amount: **${amount}**`),
+            text('Are you sure you want to transfer?'),
+          ]),
+        },
+      });
+      if (result !== true) {
+        return { txHash: null };
+        break;
+      }
       const txHash = await transferCoin(to, amount);
-      return { txHash };
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'alert',
+          content: panel([
+            heading('Amount transferred successfully.'),
+            text(`To: **${to}**`),
+            text(`Amount: **${amount}**`),
+            text(`Transaction Hash: **${txHash}**`),
+          ]),
+        },
+      });
       break;
     }
     case 'fundMe': {
-      // const { address } = request.params;
-      // console.log('this is address', address);
-      const txHash = await fundMe();
-      return { txHash };
+      const txHash: string = await fundMe();
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'alert',
+          content: panel([
+            heading('Funded 1 APT successfully.'),
+            text(`Transaction Hash: **${txHash}**`),
+          ]),
+        },
+      });
+      break;
+    }
+    case 'txnHistory': {
+      const txnHistory = await getAllTxn();
+      return { txnHistory };
+      break;
+    }
+    case 'getBalance': {
+      const balance = await getBal();
+      return { balance };
       break;
     }
     default:

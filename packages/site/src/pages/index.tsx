@@ -27,6 +27,8 @@ import {
   shouldDisplayReconnectButton,
   sendCoin,
   sendFundMe,
+  sendTxnHistory,
+  sendGetBalance
 } from '../utils';
 
 const Container = styled.div`
@@ -132,7 +134,10 @@ const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [transferAmount, setTransferAmount] = useState(0);
   const [reciever, setReciever] = useState('');
-  
+  const [isAccountCreated, setIsAccountCreated] = useState(false);
+  const [address, setAddress] = useState('');
+  const [balance, setBalance] = useState(0);
+
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? state.isFlask
     : state.snapsDetected;
@@ -194,7 +199,11 @@ const Index = () => {
 
   const handleSendGetAccount = async () => {
     try {
-      await sendGetAccount();
+      const accountinfo = await sendGetAccount();
+      const { address, bal } = accountinfo;
+      setAddress(address);
+      setBalance(bal);
+      setIsAccountCreated(true);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -213,12 +222,31 @@ const Index = () => {
   const handleFundMeWithFaucet = async () => {
     try {
       await sendFundMe();
+      const updatedBalance = await sendGetAccount();
+      setBalance(updatedBalance.bal);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
-
     }
   };
+
+  const handleGetAllTransactions = async () => {
+    try {
+      await sendTxnHistory();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+    }
+  }
+  
+  const getBalance = async () => {
+    try {
+      const bal = await sendGetBalance();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+    }
+  }
 
   return (
     <Container>
@@ -315,7 +343,8 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
-        <button onClick={handleFundMeWithFaucet}>Fund Me with Faucet</button>
+        <button onClick={handleFundMeWithFaucet}>Fund Me with Faucet {balance} </button>
+        <button onClick={handleGetAllTransactions}>Get All Transactions</button>
 
         <input
           type="text"

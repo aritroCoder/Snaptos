@@ -11,6 +11,7 @@ const HOST = 'http://localhost:5500';
  * @throws {Error} If the account could not be created.
  */
 export default async function createAccount(): Promise<{
+  balance : number
   transactionHash: any;
   accountAddress: string;
 }> {
@@ -37,7 +38,16 @@ export default async function createAccount(): Promise<{
     }),
   })
   .then(res => res.json())
+  const balance = await fetch(`${HOST}/getBalance`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ address: account.accountAddress.toString() }),
+  }).then((res) => res.json());
+  const bal = balance[0].amount;
   return {
+    balance:bal,
     transactionHash: txn,
     accountAddress: account.accountAddress.toString(),
   };
