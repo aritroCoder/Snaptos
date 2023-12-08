@@ -1,5 +1,13 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
+import { Button, TextField, Modal,Typography,List} from '@mui/material';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+
 
 import {
   ConnectButton,
@@ -86,6 +94,14 @@ const Notice = styled.div`
     padding: 1.6rem;
   }
 `;
+const StyledListContainer = styled.div`
+width: 100%; 
+max-width: 800px; 
+margin: 0 auto; 
+height: 400px; 
+max-height: 80vh; 
+overflow: auto;
+`;
 
 const ErrorMessage = styled.div`
   background-color: ${({ theme }) => theme.colors.error?.muted};
@@ -104,12 +120,19 @@ const ErrorMessage = styled.div`
     max-width: 100%;
   }
 `;
+const HorizontalButtonContainer = styled.div`
+display: flex;
+column-gap: 20px;  
+align-items: flex-start;
+margin-top:20px
+
+`;
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [transferAmount, setTransferAmount] = useState(0);
   const [reciever, setReciever] = useState('');
-
+  
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? state.isFlask
     : state.snapsDetected;
@@ -128,7 +151,38 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
+  const [isActivityListOpen, setIsActivityListOpen] = useState(false);
 
+  const toggleActivityList = () => {
+    setIsActivityListOpen(!isActivityListOpen);
+  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] = useState(false);
+  const [isInnerModalOpen, setIsInnerModalOpen] = useState(false);
+
+  const openCreateAccountModal = () => {
+    setIsCreateAccountModalOpen(true);
+  };
+
+  const closeCreateAccountModal = () => {
+    setIsCreateAccountModalOpen(false);
+  };
+
+  const openInnerModal = () => {
+    setIsInnerModalOpen(true);
+  };
+
+  const closeInnerModal = () => {
+    setIsInnerModalOpen(false);
+  };
   const handleSendHelloClick = async () => {
     try {
       await sendHello();
@@ -168,12 +222,12 @@ const Index = () => {
 
   return (
     <Container>
-      <Heading>
+      {/* <Heading>
         Welcome to <Span>template-snap</Span>
       </Heading>
       <Subtitle>
         Get started by editing <code>src/index.ts</code>
-      </Subtitle>
+      </Subtitle> */}
       <CardContainer>
         {state.error && (
           <ErrorMessage>
@@ -301,8 +355,100 @@ const Index = () => {
           </p>
         </Notice>
       </CardContainer>
-    </Container>
-  );
-};
+      
+      <Container>
+      {isModalOpen && (
+      <Dialog open={isModalOpen} onClose={closeModal}>
+        <DialogTitle>List Item Details</DialogTitle>
+        <DialogContent>
+          {/* Content for the modal */}
+          <p>Details of the selected list item...</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeModal} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )}
+     <Button variant="contained" onClick={openCreateAccountModal} style={{ marginBottom: '20px' }}>
+        Create Account
+      </Button>
 
-export default Index;
+      <Dialog open={isCreateAccountModalOpen} onClose={closeCreateAccountModal}>
+        <DialogTitle>Create Account</DialogTitle>
+        <DialogContent>
+          <p>Modal content for creating an account.</p>
+          <Button variant="contained" onClick={openInnerModal}>
+            Open Inner Modal
+          </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeCreateAccountModal}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={isInnerModalOpen} onClose={closeInnerModal}>
+        <DialogTitle>Inner Modal</DialogTitle>
+        <DialogContent>
+          <p>Content inside the inner modal.</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeInnerModal}>Close</Button>
+        </DialogActions>
+      </Dialog>
+      <HorizontalButtonContainer>
+        {/* Content inside the custom Container component */}
+        <Typography variant="h3" gutterBottom style={{ textAlign: 'center' }}>
+          0 ETH
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          $0.00 USD
+        </Typography>
+        <div style={{ display: 'flex'}}>
+        <Button variant="contained">SEND</Button>
+        <Button variant="contained">FAUCET</Button>
+        <Button variant="contained" onClick={toggleActivityList}>ACTIVITY</Button></div>
+        </HorizontalButtonContainer>
+        {isActivityListOpen && (
+       
+           <StyledListContainer>
+           <List
+      sx={{
+        // width: '100%',
+        // maxWidth: '90%',
+        bgcolor: 'background.paper',
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 300,
+        '& ul': { padding: 0 },
+      }}
+      subheader={<li />}
+    >
+      {[0, 1, 2, 3, 4].map((sectionId) => (
+        <li key={`section-${sectionId}`}>
+          <ul>
+            
+            {[0, 1, 2].map((item) => (
+              <ListItem button onClick={openModal}>
+              <ListItemText primary={`Item ${item}`} style={{ color: 'black' }} />
+            </ListItem>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </List></StyledListContainer>
+        
+      )}
+    
+  
+      </Container>
+    </Container>
+    
+  );};
+  
+  
+  
+  export  default Index;
+
+
