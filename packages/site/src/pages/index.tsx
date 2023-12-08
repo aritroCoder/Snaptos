@@ -1,5 +1,9 @@
+import React from 'react';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
+// import Modal from '@mui/material/Modal';
+import Modal from 'react-modal';
+
 
 import {
   ConnectButton,
@@ -111,6 +115,11 @@ const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [transferAmount, setTransferAmount] = useState(0);
   const [reciever, setReciever] = useState('');
+  const [password, setPassword] = useState<string>('');
+  const [isPasswordSet, setIsPasswordSet] = useState<boolean>(false);
+  // const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isAccountCreated, setIsAccountCreated] = useState(false);
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState(0);
@@ -176,6 +185,24 @@ const Index = () => {
     }
   };
 
+  const handleCreateAccountClick = () => {
+         if (isPasswordSet) {
+            handleSendGetAccount();
+            const accountAddress =
+            console.log('password is set');
+       } else {
+            const newPassword = prompt('Please enter your password:');
+            console.log('password is not set');
+            if (newPassword) {
+               setIsPasswordSet(true);
+               setPassword(newPassword);
+               handleSendGetAccount();
+               console.log('password is set');
+      }
+    }
+  };
+
+  
   const handleGetAllTransactions = async () => {
     try {
       await sendTxnHistory();
@@ -270,14 +297,14 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
-        <Card
+        {/* <Card                  
           content={{
             title: 'Create Aptos Account',
             description:
               'Display a custom message within a confirmation screen in MetaMask.',
             button: (
               <SendHelloButton
-                onClick={handleSendGetAccount}
+                onClick={handleCreateAccountClick}
                 disabled={!state.installedSnap}
               />
             ),
@@ -288,7 +315,38 @@ const Index = () => {
             Boolean(state.installedSnap) &&
             !shouldDisplayReconnectButton(state.installedSnap)
           }
-        />
+        /> */}
+      <div>
+    
+      <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
+
+      {/* Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Create Aptos Account Modal"
+      >
+        <div>
+          <h2>Create Aptos Account</h2>
+          <p>
+            Display a custom message within a confirmation screen in MetaMask.
+          </p>
+          
+          <SendHelloButton
+            onClick={() => {
+              handleCreateAccountClick();
+              <p></p>
+              setIsModalOpen(false); 
+            }}
+            disabled={!state.installedSnap}
+          />
+        </div>
+      </Modal>
+    </div>
+
+
+
+        
         <button onClick={handleFundMeWithFaucet}>Fund Me with Faucet {balance} </button>
         <button onClick={handleGetAllTransactions}>Get All Transactions</button>
 
