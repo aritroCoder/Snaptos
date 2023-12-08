@@ -7,6 +7,7 @@ import { privateKeyTxn } from './src/privateKeyTxn';
 import { getTxn } from './src/GetTxn';
 import { genTxn } from './src/GenTxn';
 import { fundMe } from './src/Faucet';
+import { getTransByHash } from './src/GetTransByHash';
 
 const app = express();
 const PORT = 5500;
@@ -58,6 +59,11 @@ app.post('/fundMe', async (req: Request, res: Response) => {
   });
 });
 
+app.post('/getTransByHash', async (req: Request, res: Response) => {
+  res.json(await getTransByHash(req.body));
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
