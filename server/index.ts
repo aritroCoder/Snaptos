@@ -1,3 +1,4 @@
+ /* eslint-disable */
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import checkBalance from './src/CheckBalance';
@@ -8,6 +9,12 @@ import { getTxn } from './src/GetTxn';
 import { genTxn } from './src/GenTxn';
 import { fundMe } from './src/Faucet';
 import { getTransByHash } from './src/GetTransByHash';
+import { getGasPriceEstimation } from './src/gasPrice';
+
+import { AptosConfig, Network} from '@aptos-labs/ts-sdk';
+
+const APTOS_NETWORK = Network.DEVNET;
+const config = new AptosConfig({ network: APTOS_NETWORK });
 
 const app = express();
 const PORT = 5500;
@@ -28,12 +35,6 @@ app.post('/doTransaction', (req: Request, res: Response) => {
     res.json({ tx });
   });
 });
-
-// app.post('/gettx', (req: Request, res: Response) => {
-//   genTxn(req.body).then((tx) => {
-//     res.json({ tx });
-//   });
-// });
 
 app.post('/getBalance', async (req: Request, res: Response) => {
   res.json(await checkBalance(req.body));
@@ -57,6 +58,9 @@ app.post('/fundMe', async (req: Request, res: Response) => {
   fundMe(req.body).then((tx) => {
     res.json({ tx });
   });
+});
+app.get('/gasPriceEstimate', async (req: Request, res: Response) => {
+  res.json(await getGasPriceEstimation({aptosConfig: config}));
 });
 
 app.post('/getTransByHash', async (req: Request, res: Response) => {

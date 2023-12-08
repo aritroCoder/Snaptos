@@ -61,7 +61,11 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+<<<<<<< HEAD
     "@mui/material": "^5.14.20",
     "react-modal": "^3.16.1"
+=======
+    "@mui/material": "^5.14.20"
+>>>>>>> acfae4074641521bcad8dd0b97c7e40287040782
   }
 }
