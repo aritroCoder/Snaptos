@@ -5,6 +5,7 @@ import createAccount from './utils/aptos/CreateAccount';
 import transferCoin from './utils/aptos/TransferCoin';
 import { fundMe } from './utils/aptos/Faucets';
 import { getAllTxn } from './utils/aptos/GetAllTxn';
+import { getBal } from './utils/aptos/GetBal';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -46,7 +47,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       break;
     case 'getAccount': {
       const accountDetails = await createAccount();
-      return { accountDetails };
+      return  {address : accountDetails.accountAddress, bal : accountDetails.balance} ;
       break;
     }
     case 'transferCoin': {
@@ -66,7 +67,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       return { txnHistory };
       break;
     }
-
+    case 'getBalance': {
+      const balance = await getBal();
+      return { balance };
+      break;
+    }
     default:
       throw new Error('Method not found.');
   }

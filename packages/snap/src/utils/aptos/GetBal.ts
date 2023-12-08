@@ -2,15 +2,16 @@ import getAccount from './GetAccount';
 
 const HOST = 'http://localhost:5500';
 
-export async function getAllTxn() {
+export async function getBal() {
     const account = await getAccount();
-    const txnHistory = await fetch(`${HOST}/getAllTxn`, {
+    const balance = await fetch(`${HOST}/getBalance`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ address: account.accountAddress.toString() }),
       }).then((res) => res.json());
-      console.log('this is txnhistory', txnHistory);
-      return txnHistory;
+      const bal = balance[0].amount;
+      console.log('this is bal', bal);
+      return bal;
 }

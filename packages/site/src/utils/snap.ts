@@ -68,7 +68,7 @@ export const sendHello = async () => {
  * Invoke the "getAccount" method from the example snap.
  */
 export const sendGetAccount = async () => {
-  const accountData = await window.ethereum.request({
+  const accountData : any = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -78,6 +78,7 @@ export const sendGetAccount = async () => {
     },
   });
   console.log('this is accountData', accountData);
+  return accountData;
 };
 
 export const sendCoin = async (to: string, amount: number) => {
@@ -118,6 +119,20 @@ export const sendTxnHistory = async () => {
     },
   });
   console.log('this is txnHistory', txnHistory);
+}
+
+export const sendGetBalance = async () => {
+  const balance = await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'getBalance',
+      },
+    },
+  });
+  console.log('this is balance', balance);
+  return balance;
 }
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

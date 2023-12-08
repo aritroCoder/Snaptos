@@ -1,6 +1,7 @@
 import getAccount from './GetAccount';
 
 const HOST = 'http://localhost:5500';
+
 export async function fundMe() {
     const account = await getAccount();
     const Faucet = await fetch(`${HOST}/fundMe`, {
