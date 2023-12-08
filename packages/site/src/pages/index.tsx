@@ -1,13 +1,17 @@
-import { useContext, useState } from 'react';
+import React from 'react';
+import { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Modal,Typography,List} from '@mui/material';
+import { Button, TextField, Modal, Typography, List } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import Divider from '@mui/material/Divider';
 
+// import Modal from '@mui/material/Modal';
+// import Modal from 'react-modal';
 
 import {
   ConnectButton,
@@ -28,7 +32,7 @@ import {
   sendCoin,
   sendFundMe,
   sendTxnHistory,
-  sendGetBalance
+  sendGetBalance,
 } from '../utils';
 
 const Container = styled.div`
@@ -46,6 +50,7 @@ const Container = styled.div`
     width: auto;
   }
 `;
+
 
 const Heading = styled.h1`
   margin-top: 0;
@@ -77,7 +82,12 @@ const CardContainer = styled.div`
   height: 100%;
   margin-top: 1.5rem;
 `;
-
+const CreateAccountButton = styled(Button)`
+  font-size: 1.5rem;
+  border-radius: 8px;
+  width: 200px;
+  height: 60px;
+`;
 const Notice = styled.div`
   background-color: ${({ theme }) => theme.colors.background?.alternative};
   border: 1px solid ${({ theme }) => theme.colors.border?.default};
@@ -97,12 +107,12 @@ const Notice = styled.div`
   }
 `;
 const StyledListContainer = styled.div`
-width: 100%; 
-max-width: 800px; 
-margin: 0 auto; 
-height: 400px; 
-max-height: 80vh; 
-overflow: auto;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  height: 400px;
+  max-height: 80vh;
+  overflow: auto;
 `;
 
 const ErrorMessage = styled.div`
@@ -124,16 +134,43 @@ const ErrorMessage = styled.div`
 `;
 const HorizontalButtonContainer = styled.div`
 display: flex;
-column-gap: 20px;  
-align-items: flex-start;
-margin-top:20px
-
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
 `;
-
+const BalanceText = styled.div`
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1.2rem;
+`;
+const AccountInfoBox = styled.div`
+border: 1px solid rgba(25, 118, 210, 0.5); 
+  border-radius: 12px; 
+  padding: 15px; 
+  margin-bottom: 20px;
+  color: black;
+  font-size: 1.2rem;  
+  width: 200px;      
+  height: 10px;     
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  background-color: rgba(25, 118, 210, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const AccountModalContent = styled(DialogContent)`
+  font-size:90rem; 
+  color:#1976d2;
+  fontWeight: 'bold',
+`;
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [transferAmount, setTransferAmount] = useState(0);
   const [reciever, setReciever] = useState('');
+  const [password, setPassword] = useState<string>('');
+  const [isPasswordSet, setIsPasswordSet] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isAccountCreated, setIsAccountCreated] = useState(false);
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState(0);
@@ -141,6 +178,39 @@ const Index = () => {
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? state.isFlask
     : state.snapsDetected;
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [sendAmount, setSendAmount] = useState('');
+  const [isSendModalOpen, setIsSendModalOpen] = useState(false);
+  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+
+  const openSendModal = () => {
+    setIsSendModalOpen(true);
+  };
+
+  const closeSendModal = () => {
+    setIsSendModalOpen(false);
+  };
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+  const openConfirmDialog = () => {
+    setIsConfirmDialogOpen(true);
+  };
+
+  const closeConfirmDialog = () => {
+    setIsConfirmDialogOpen(false);
+  };
+
+  const handleRecipientChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRecipientAddress(event.target.value);
+  };
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const enteredAmount = event.target.value;
+    setSendAmount(enteredAmount);
+    setIsNextButtonDisabled(Number(enteredAmount) > balance);
+  };
 
   const handleConnectClick = async () => {
     try {
@@ -161,7 +231,6 @@ const Index = () => {
   const toggleActivityList = () => {
     setIsActivityListOpen(!isActivityListOpen);
   };
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -170,24 +239,26 @@ const Index = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] = useState(false);
-  const [isInnerModalOpen, setIsInnerModalOpen] = useState(false);
-
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [inputPassword, setInputPassword] = useState('');
   const openCreateAccountModal = () => {
-    setIsCreateAccountModalOpen(true);
+    setIsCreatingAccount(true);
   };
 
   const closeCreateAccountModal = () => {
-    setIsCreateAccountModalOpen(false);
+    setIsCreatingAccount(false);
+    setInputPassword('');
   };
 
-  const openInnerModal = () => {
-    setIsInnerModalOpen(true);
+  const handleAccountClick = () => {
+    openCreateAccountModal();
+  };
+  const handleCreateAccount = () => {
+    setIsCreatingAccount(false);
+    setIsAccountCreated(true);
+    setInputPassword('');
   };
 
-  const closeInnerModal = () => {
-    setIsInnerModalOpen(false);
-  };
   const handleSendHelloClick = async () => {
     try {
       await sendHello();
@@ -196,7 +267,11 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
-
+  const handleSend = () => {
+    closeSendModal();
+    closeConfirmDialog();
+    setIsSendModalOpen(true);
+  };
   const handleSendGetAccount = async () => {
     try {
       const accountinfo = await sendGetAccount();
@@ -230,6 +305,22 @@ const Index = () => {
     }
   };
 
+  const handleCreateAccountClick = () => {
+    if (isPasswordSet) {
+      handleSendGetAccount();
+      const accountAddress = console.log('password is set');
+    } else {
+      const newPassword = prompt('Please enter your password:');
+      console.log('password is not set');
+      if (newPassword) {
+        setIsPasswordSet(true);
+        setPassword(newPassword);
+        handleSendGetAccount();
+        console.log('password is set');
+      }
+    }
+  };
+
   const handleGetAllTransactions = async () => {
     try {
       await sendTxnHistory();
@@ -237,8 +328,8 @@ const Index = () => {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
-  }
-  
+  };
+
   const getBalance = async () => {
     try {
       const bal = await sendGetBalance();
@@ -246,238 +337,185 @@ const Index = () => {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
-  }
+  };
 
   return (
     <Container>
-      {/* <Heading>
-        Welcome to <Span>template-snap</Span>
-      </Heading>
-      <Subtitle>
-        Get started by editing <code>src/index.ts</code>
-      </Subtitle> */}
-      <CardContainer>
-        {state.error && (
-          <ErrorMessage>
-            <b>An error happened:</b> {state.error.message}
-          </ErrorMessage>
-        )}
-        {!isMetaMaskReady && (
-          <Card
-            content={{
-              title: 'Install',
-              description:
-                'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
-              button: <InstallFlaskButton />,
-            }}
+      <Dialog open={isSendModalOpen} onClose={closeSendModal}>
+        <DialogTitle>Send Funds</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Recipient Address"
+            value={recipientAddress}
+            onChange={handleRecipientChange}
             fullWidth
+            margin="normal"
           />
-        )}
-        {!state.installedSnap && (
-          <Card
-            content={{
-              title: 'Connect',
-              description:
-                'Get started by connecting to and installing the example snap.',
-              button: (
-                <ConnectButton
-                  onClick={handleConnectClick}
-                  disabled={!isMetaMaskReady}
-                />
-              ),
-            }}
-            disabled={!isMetaMaskReady}
+          <TextField
+            label="Amount"
+            type="number"
+            value={sendAmount}
+            onChange={handleAmountChange}
+            fullWidth
+            margin="normal"
           />
-        )}
-        {shouldDisplayReconnectButton(state.installedSnap) && (
-          <Card
-            content={{
-              title: 'Reconnect',
-              description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
-              button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
-                />
-              ),
-            }}
-            disabled={!state.installedSnap}
-          />
-        )}
-        <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        <Card
-          content={{
-            title: 'Create Aptos Account',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendGetAccount}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        <button onClick={handleFundMeWithFaucet}>Fund Me with Faucet {balance} </button>
-        <button onClick={handleGetAllTransactions}>Get All Transactions</button>
-
-        <input
-          type="text"
-          placeholder="Reciever"
-          onChange={(e) => setReciever(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Amount"
-          onChange={(e) => setTransferAmount(parseInt(e.target.value))}
-        />
-        <Card
-          content={{
-            title: 'Transfer Coin',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleCoinTransfer}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
-        </Notice>
-      </CardContainer>
-      
-      <Container>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeSendModal}>Cancel</Button>
+          <Button onClick={openConfirmDialog} disabled={isNextButtonDisabled}>
+            Next
+          </Button>
+        </DialogActions>
+      </Dialog>
       {isModalOpen && (
-      <Dialog open={isModalOpen} onClose={closeModal}>
-        <DialogTitle>List Item Details</DialogTitle>
-        <DialogContent>
-          {/* Content for the modal */}
-          <p>Details of the selected list item...</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeModal} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )}
-     <Button variant="contained" onClick={openCreateAccountModal} style={{ marginBottom: '20px' }}>
+        <Dialog open={isModalOpen} onClose={closeModal}>
+          <DialogTitle>List Item Details</DialogTitle>
+          <DialogContent>
+            {/* Content for the modal */}
+            <p>Details of the selected list item...</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeModal} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+      <CreateAccountButton
+        variant="outlined"
+        onClick={handleAccountClick}
+        style={{
+          marginBottom: '20px',
+          borderRadius: '12px',
+          fontSize: '1.2rem',
+          padding: '10px 20px',
+          width: '200px',
+          fontWeight: 'bold',
+          marginTop: '10px',
+        }}
+      >
         Create Account
-      </Button>
-
-      <Dialog open={isCreateAccountModalOpen} onClose={closeCreateAccountModal}>
-        <DialogTitle>Create Account</DialogTitle>
+      </CreateAccountButton>
+      <Dialog
+        open={isCreatingAccount}
+        onClose={closeCreateAccountModal}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle style={{ fontSize: '2rem' }}>Create Account</DialogTitle>
         <DialogContent>
-          <p>Modal content for creating an account.</p>
-          <Button variant="contained" onClick={openInnerModal}>
-            Open Inner Modal
+          <TextField
+            label="Enter Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+              style: { fontSize: '1.5rem' },
+            }}
+            inputProps={{
+              style: { fontSize: '1.2rem' },
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCreateAccount} style={{ fontSize: '1.3rem' }}>
+            Create
           </Button>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeCreateAccountModal}>Cancel</Button>
+          <Button
+            onClick={closeCreateAccountModal}
+            style={{ fontSize: '1.3rem' }}
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
+      {isAccountCreated && (
+        
+          <AccountInfoBox>
+        <AccountModalContent>
+          <Typography variant="body1">
+            Account : {address ? address : 'Not available'}
+          </Typography>
+          </AccountModalContent>
+        </AccountInfoBox>
+      )}
 
-      <Dialog open={isInnerModalOpen} onClose={closeInnerModal}>
-        <DialogTitle>Inner Modal</DialogTitle>
-        <DialogContent>
-          <p>Content inside the inner modal.</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeInnerModal}>Close</Button>
-        </DialogActions>
-      </Dialog>
       <HorizontalButtonContainer>
         {/* Content inside the custom Container component */}
         <Typography variant="h3" gutterBottom style={{ textAlign: 'center' }}>
-          0 ETH
+          {balance} APT
         </Typography>
-        <Typography variant="h5" gutterBottom>
-          $0.00 USD
-        </Typography>
-        <div style={{ display: 'flex'}}>
-        <Button variant="contained">SEND</Button>
-        <Button variant="contained">FAUCET</Button>
-        <Button variant="contained" onClick={toggleActivityList}>ACTIVITY</Button></div>
-        </HorizontalButtonContainer>
-        {isActivityListOpen && (
-       
-           <StyledListContainer>
-           <List
-      sx={{
-        // width: '100%',
-        // maxWidth: '90%',
-        bgcolor: 'background.paper',
-        position: 'relative',
-        overflow: 'auto',
-        maxHeight: 300,
-        '& ul': { padding: 0 },
-      }}
-      subheader={<li />}
-    >
-      {[0, 1, 2, 3, 4].map((sectionId) => (
-        <li key={`section-${sectionId}`}>
-          <ul>
-            
-            {[0, 1, 2].map((item) => (
-              <ListItem button onClick={openModal}>
-              <ListItemText primary={`Item ${item}`} style={{ color: 'black' }} />
-            </ListItem>
+
+        <div style={{ display: 'flex' }}>
+          <Button variant="contained" onClick={openSendModal}>
+            SEND
+          </Button>
+          <Button variant="contained" onClick={handleFundMeWithFaucet}>
+            FAUCET
+          </Button>
+          <Button variant="contained" onClick={toggleActivityList}>
+            ACTIVITY
+          </Button>
+        </div>
+      </HorizontalButtonContainer>
+
+      <Dialog open={isConfirmDialogOpen} onClose={closeConfirmDialog} fullWidth>
+        <DialogTitle>Confirm Transaction</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Recipient Address: {recipientAddress}
+          </Typography>
+          <Typography variant="body1">Amount: {sendAmount}</Typography>
+          <Typography variant="body1">Fee: 0</Typography>
+
+          <Typography variant="body1">
+            Total Amount: {parseInt(sendAmount) + 0}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeConfirmDialog}>Back</Button>
+          <Button onClick={handleSend} color="primary">
+            Send
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {isActivityListOpen && (
+        <StyledListContainer>
+          <List
+            sx={{
+              // width: '100%',
+              // maxWidth: '90%',
+              bgcolor: 'background.paper',
+              position: 'relative',
+              overflow: 'auto',
+              maxHeight: 300,
+              '& ul': { padding: 0 },
+            }}
+            subheader={<li />}
+          >
+            {[0, 1, 2, 3, 4].map((sectionId) => (
+              <li key={`section-${sectionId}`}>
+                <ul>
+                  {[0, 1, 2].map((item) => (
+                    <ListItem button onClick={openModal}>
+                      <ListItemText
+                        primary={`Item ${item}`}
+                        style={{ color: 'black' }}
+                      />
+                    </ListItem>
+                  ))}
+                </ul>
+              </li>
             ))}
-          </ul>
-        </li>
-      ))}
-    </List></StyledListContainer>
-        
+          </List>
+        </StyledListContainer>
       )}
-    
-  
-      </Container>
     </Container>
-    
-  );};
-  
-  
-  
-  export  default Index;
+    // </Container>
+  );
+};
 
-
+export default Index;

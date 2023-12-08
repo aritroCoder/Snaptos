@@ -8,6 +8,7 @@ import { privateKeyTxn } from './src/privateKeyTxn';
 import { getTxn } from './src/GetTxn';
 import { genTxn } from './src/GenTxn';
 import { fundMe } from './src/Faucet';
+import { getTransByHash } from './src/GetTransByHash';
 import { getGasPriceEstimation } from './src/gasPrice';
 
 import { AptosConfig, Network} from '@aptos-labs/ts-sdk';
@@ -62,6 +63,11 @@ app.get('/gasPriceEstimate', async (req: Request, res: Response) => {
   res.json(await getGasPriceEstimation({aptosConfig: config}));
 });
 
+app.post('/getTransByHash', async (req: Request, res: Response) => {
+  res.json(await getTransByHash(req.body));
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
