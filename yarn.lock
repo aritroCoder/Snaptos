@@ -7818,13 +7818,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aes256@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "aes256@npm:1.1.0"
-  checksum: 26fe113249658b2d68aab9b6c8f8d1fe9aba884a6f4843f9b7d73f2a98d1f4f3bd4387bb5a58cabbd7009f8b883d4ec59fb9f8a81508c098934c33b0972a4426
-  languageName: node
-  linkType: hard
-
 "agent-base@npm:6, agent-base@npm:^6.0.2":
   version: 6.0.2
   resolution: "agent-base@npm:6.0.2"
@@ -10360,6 +10353,13 @@ __metadata:
     randombytes: ^2.0.0
     randomfill: ^1.0.3
   checksum: c1609af82605474262f3eaa07daa0b2140026bd264ab316d4bf1170272570dbe02f0c49e29407fe0d3634f96c507c27a19a6765fb856fed854a625f9d15618e2
+  languageName: node
+  linkType: hard
+
+"crypto-js@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "crypto-js@npm:4.2.0"
+  checksum: f051666dbc077c8324777f44fbd3aaea2986f198fe85092535130d17026c7c2ccf2d23ee5b29b36f7a4a07312db2fae23c9094b644cc35f7858b1b4fcaf27774
   languageName: node
   linkType: hard
 
@@ -20500,7 +20500,6 @@ __metadata:
     "@mui/material": ^5.14.20
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
-    aes256: ^1.1.0
     clipboard-copy: ^4.0.1
     eslint: ^8.45.0
     eslint-config-prettier: ^8.5.0
@@ -21084,8 +21083,8 @@ __metadata:
     "@metamask/snaps-ui": ^3.0.1
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
-    aes256: ^1.1.0
     buffer: ^6.0.3
+    crypto-js: ^4.2.0
     eslint: ^8.45.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-import: ~2.26.0

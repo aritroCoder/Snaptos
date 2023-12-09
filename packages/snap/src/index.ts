@@ -94,11 +94,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         break;
       }
       const ac = await getAccount();
-      console.log({ privateKey: ac.privateKey.toString() });
       const enpk = encryptPhrase(ac.privateKey.toString(), 'key');
-      console.log({ enpk });
-      const txHash = await transferCoin(to, amount, enpk);
-      console.log({ txHash });
+      const txHash: { hash: string } = await transferCoin(to, amount, enpk);
       return snap.request({
         method: 'snap_dialog',
         params: {
@@ -107,7 +104,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
             heading('Amount transferred successfully.'),
             text(`To: **${to}**`),
             text(`Amount: **${amount}**`),
-            text(`Transaction Hash: **${txHash}**`),
+            text(`Transaction Hash: **${txHash.hash}**`),
           ]),
         },
       });
