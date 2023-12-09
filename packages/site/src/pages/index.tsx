@@ -8,17 +8,21 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // import Modal from '@mui/material/Modal';
 // import Modal from 'react-modal';
 
 import {
+  Card,
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
   SendHelloButton,
-  Card,
+  
 } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
@@ -52,6 +56,8 @@ const Container = styled.div`
 `;
 
 
+const darkTheme = createTheme({ palette: { mode: 'dark' } });
+const lightTheme = createTheme({ palette: { mode: 'light' } });
 const Heading = styled.h1`
   margin-top: 0;
   margin-bottom: 2.4rem;
@@ -83,10 +89,19 @@ const CardContainer = styled.div`
   margin-top: 1.5rem;
 `;
 const CreateAccountButton = styled(Button)`
-  font-size: 1.5rem;
-  border-radius: 8px;
-  width: 200px;
-  height: 60px;
+font-size: 1.5rem;
+border-radius: 8px;
+width: 200px;
+height: 40px;
+margin-top: 50px; 
+align-self: center; 
+display: flex;
+justify-content: center;
+align-items: center;
+position: absolute;
+top: 10px; 
+left: 50%; 
+transform: translateX(-50%);
 `;
 const Notice = styled.div`
   background-color: ${({ theme }) => theme.colors.background?.alternative};
@@ -133,7 +148,7 @@ const ErrorMessage = styled.div`
   }
 `;
 const HorizontalButtonContainer = styled.div`
-display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 10px;
@@ -144,24 +159,25 @@ const BalanceText = styled.div`
   font-size: 1.2rem;
 `;
 const AccountInfoBox = styled.div`
-border: 1px solid rgba(25, 118, 210, 0.5); 
-  border-radius: 12px; 
-  padding: 15px; 
+  border: 1px solid rgba(25, 118, 210, 0.5);
+  border-radius: 12px;
+  padding: 15px;
   margin-bottom: 20px;
   color: black;
-  font-size: 1.2rem;  
-  width: 200px;      
-  height: 10px;     
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  font-size: 1.2rem;
+  width: 200px;
+  height: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background-color: rgba(25, 118, 210, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
+  
 `;
 const AccountModalContent = styled(DialogContent)`
-  font-size:90rem; 
-  color:#1976d2;
-  fontWeight: 'bold',
+  font-size: 90rem;
+  color: #1976d2;
+  fontweight: 'bold';
 `;
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -293,7 +309,11 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
-
+  useEffect(() => {
+    if (!isCreatingAccount) {
+      setPassword('');
+    }
+  }, [isCreatingAccount]);
   const handleFundMeWithFaucet = async () => {
     try {
       await sendFundMe();
@@ -306,6 +326,8 @@ const Index = () => {
   };
 
   const handleCreateAccountClick = () => {
+    setIsAccountCreated(true);
+    
     if (isPasswordSet) {
       handleSendGetAccount();
       const accountAddress = console.log('password is set');
@@ -341,6 +363,7 @@ const Index = () => {
 
   return (
     <Container>
+      
       <Dialog open={isSendModalOpen} onClose={closeSendModal}>
         <DialogTitle>Send Funds</DialogTitle>
         <DialogContent>
@@ -381,26 +404,53 @@ const Index = () => {
           </DialogActions>
         </Dialog>
       )}
+       {!isAccountCreated && (
+        <div style={{ textAlign: 'center' }}>
+          <Card
+          content={{
+            title: 'Create Aptos Account',
+            description:
+              'Display a custom message within a confirmation screen in MetaMask.',
+            button: (
+              <SendHelloButton
+                onClick={handleSendGetAccount}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
       <CreateAccountButton
         variant="outlined"
         onClick={handleAccountClick}
         style={{
           marginBottom: '20px',
           borderRadius: '12px',
-          fontSize: '1.2rem',
+          fontSize: '1.8rem',
           padding: '10px 20px',
-          width: '200px',
+          width: '250px',
           fontWeight: 'bold',
-          marginTop: '10px',
+          marginTop: 'auto',
+          height:'40px',
+          flex: 1, display: 'flex', justifyContent: 'center',
+           alignItems: 'center', flexDirection: 'column' 
+
         }}
       >
         Create Account
       </CreateAccountButton>
+      </div>)}
       <Dialog
         open={isCreatingAccount}
         onClose={closeCreateAccountModal}
         fullWidth
         maxWidth="sm"
+        
       >
         <DialogTitle style={{ fontSize: '2rem' }}>Create Account</DialogTitle>
         <DialogContent>
@@ -432,34 +482,48 @@ const Index = () => {
         </DialogActions>
       </Dialog>
       {isAccountCreated && (
-        
-          <AccountInfoBox>
-        <AccountModalContent>
-          <Typography variant="body1">
-            Account : {address ? address : 'Not available'}
-          </Typography>
+        <>
+        <Paper elevation={24} style={{ width: '800px', height: '450px', margin: '20px', padding: '10px', borderRadius: '15px' }}>
+      
+      
+        <AccountInfoBox style={{
+          position: 'absolute',
+          top: '38%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}>
+          <AccountModalContent>
+            <Typography variant="body1">
+              Account : {address ? address : 'Not available'}
+            </Typography>
           </AccountModalContent>
         </AccountInfoBox>
-      )}
+      
+     
+      <HorizontalButtonContainer style={{ position: 'absolute', bottom: '240px', left: '50%', transform: 'translateX(-50%)' }}>
+        
+            <Typography
+              variant="h3"
+              gutterBottom
+              style={{ textAlign: 'center' }}
+            >
+              {balance} APT
+            </Typography>
 
-      <HorizontalButtonContainer>
-        {/* Content inside the custom Container component */}
-        <Typography variant="h3" gutterBottom style={{ textAlign: 'center' }}>
-          {balance} APT
-        </Typography>
-
-        <div style={{ display: 'flex' }}>
-          <Button variant="contained" onClick={openSendModal}>
-            SEND
-          </Button>
-          <Button variant="contained" onClick={handleFundMeWithFaucet}>
-            FAUCET
-          </Button>
-          <Button variant="contained" onClick={toggleActivityList}>
-            ACTIVITY
-          </Button>
-        </div>
-      </HorizontalButtonContainer>
+            <div style={{ display: 'flex' }}>
+              <Button variant="contained" onClick={openSendModal}>
+                SEND
+              </Button>
+              <Button variant="contained" onClick={handleFundMeWithFaucet}>
+                FAUCET
+              </Button>
+              <Button variant="contained" onClick={toggleActivityList}>
+                ACTIVITY
+              </Button>
+            </div>
+          
+      </HorizontalButtonContainer> 
+        
 
       <Dialog open={isConfirmDialogOpen} onClose={closeConfirmDialog} fullWidth>
         <DialogTitle>Confirm Transaction</DialogTitle>
@@ -512,8 +576,9 @@ const Index = () => {
             ))}
           </List>
         </StyledListContainer>
-      )}
+      )}</Paper></>)}
     </Container>
+    
     // </Container>
   );
 };
