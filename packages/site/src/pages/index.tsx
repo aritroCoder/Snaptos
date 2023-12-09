@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ReactComponent as Faucet } from '../assets/faucet.svg';
 
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
@@ -27,6 +28,8 @@ import {
   sendTxnHistory,
   sendGetBalance,
 } from '../utils';
+import { Card, SendHelloButton } from '../components';
+import SendIcon from '@mui/icons-material/Send';
 
 const Container = styled.div`
   display: flex;
@@ -71,7 +74,7 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   max-width: 64.8rem;
   width: 100%;
   height: 100%;
@@ -140,7 +143,7 @@ const HorizontalButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 60px;
 `;
 const BalanceText = styled.div`
   text-align: center;
@@ -168,12 +171,14 @@ const AccountModalContent = styled(DialogContent)`
   color: #1976d2;
   fontweight: 'bold';
 `;
+
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [password, setPassword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isAccountCreated, setIsAccountCreated] = useState(false);
+  const [showCreateAccountCard, setShowCreateAccountCard] = useState(true);
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState(0);
 
@@ -201,7 +206,11 @@ const Index = () => {
   const closeConfirmDialog = () => {
     setIsConfirmDialogOpen(false);
   };
-
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputVal = e.target.value;
+    setInputPassword(inputVal);
+    setIsNextButtonDisabled(inputVal === '');
+  };
   const handleRecipientChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -260,6 +269,7 @@ const Index = () => {
     setIsCreatingAccount(false);
     setIsAccountCreated(true);
     setInputPassword('');
+    setShowCreateAccountCard(false);
   };
 
   const handleSend = () => {
@@ -316,7 +326,36 @@ const Index = () => {
 
   return (
     <Container>
-      
+      <Heading>
+        Welcome to <Span>Aptos-snap</Span>
+      </Heading>
+      <CardContainer>
+        {state.error && (
+          <ErrorMessage>
+            <b>An error happened:</b> {state.error.message}
+          </ErrorMessage>
+        )}
+         {showCreateAccountCard && !isAccountCreated && (
+        <Card
+        content={{
+          title: 'Create Aptos Account',
+          description:
+            '#############',
+          button: (
+            <SendHelloButton
+              onClick={handleAccountClick}
+              disabled={!state.installedSnap}
+            />
+          ),
+        }}
+        disabled={!state.installedSnap}
+        fullWidth={
+          isMetaMaskReady &&
+          Boolean(state.installedSnap) &&
+          !shouldDisplayReconnectButton(state.installedSnap)
+        }
+      /> )}
+      </CardContainer>
       <Dialog open={isSendModalOpen} onClose={closeSendModal}>
         <DialogTitle>Send Funds</DialogTitle>
         <DialogContent>
@@ -357,7 +396,7 @@ const Index = () => {
           </DialogActions>
         </Dialog>
       )}
-      {!isAccountCreated && ( <CreateAccountButton
+      {/* {!isAccountCreated && ( <CreateAccountButton
         variant="outlined"
         onClick={handleAccountClick}
         style={{
@@ -376,7 +415,7 @@ const Index = () => {
       >
         Create Account
       </CreateAccountButton>
-      )}
+      )} */}
       <Dialog
         open={isCreatingAccount}
         onClose={closeCreateAccountModal}
@@ -389,8 +428,9 @@ const Index = () => {
           <TextField
             label="Enter Password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={inputPassword}
+            onChange={handlePasswordChange}
+            
             fullWidth
             margin="normal"
             InputLabelProps={{
@@ -402,7 +442,7 @@ const Index = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCreateAccount} style={{ fontSize: '1.3rem' }}>
+          <Button onClick={handleCreateAccount} disabled={isNextButtonDisabled} style={{ fontSize: '1.3rem' }}>
             Create
           </Button>
           <Button
@@ -419,10 +459,7 @@ const Index = () => {
       
       
         <AccountInfoBox style={{
-          position: 'absolute',
-          top: '38%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, 29%)' 
         }}>
           <AccountModalContent>
             <Typography variant="body1">
@@ -440,13 +477,15 @@ const Index = () => {
         </Typography>
 
         <div style={{ display: 'flex' }}>
-          <Button variant="contained" onClick={openSendModal}>
+          <Button variant="contained" onClick={openSendModal} style={{ backgroundColor: '#6F4CFF', color: 'white', marginRight: '10px' }}>
+            <SendIcon />
             SEND
           </Button>
-          <Button variant="contained" onClick={handleFundMeWithFaucet}>
-            FAUCET
+          <Button variant="contained" onClick={handleFundMeWithFaucet} style={{ backgroundColor: '#6F4CFF', color: 'white', marginRight: '10px' }}>
+            <Faucet/>
+             FAUCET
           </Button>
-          <Button variant="contained" onClick={toggleActivityList}>
+          <Button variant="contained" onClick={toggleActivityList} style={{ backgroundColor: '#6F4CFF', color: 'white' }}>
             ACTIVITY
           </Button>
         </div>
