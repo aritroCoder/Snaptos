@@ -31,6 +31,7 @@
     "@metamask/key-tree": "^9.0.0",
     "@metamask/snaps-types": "^3.0.1",
     "@metamask/snaps-ui": "^3.0.1",
+    "aes256": "^1.1.0",
     "buffer": "^6.0.3"
   },
   "devDependencies": {

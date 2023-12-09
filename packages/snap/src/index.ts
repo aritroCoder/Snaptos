@@ -6,6 +6,8 @@ import transferCoin from './utils/aptos/TransferCoin';
 import { fundMe } from './utils/aptos/Faucets';
 import { getAllTxn } from './utils/aptos/GetAllTxn';
 import { getBal } from './utils/aptos/GetBal';
+import getAccount from './utils/aptos/GetAccount';
+import encryptPhrase from './utils/encryption/encrypt';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -48,6 +50,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         },
       });
       break;
+    // create new account
     case 'getAccount': {
       const accountDetails: {
         accountAddress: string;
@@ -64,9 +67,13 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           ]),
         },
       });
-      return  {address : accountDetails.accountAddress, bal : accountDetails.balance} ;
+      return {
+        address: accountDetails.accountAddress,
+        bal: accountDetails.balance,
+      };
       break;
     }
+    // send tokens
     case 'transferCoin': {
       const { to, amount } = request.params;
       const result = await snap.request({
@@ -85,7 +92,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         return { txHash: null };
         break;
       }
-      const txHash = await transferCoin(to, amount);
+      const ac = await getAccount();
+      const txHash = await transferCoin(
+        to,
+        amount,
+        encryptPhrase(ac.privateKey.toString(), 'key'),
+      );
       return snap.request({
         method: 'snap_dialog',
         params: {

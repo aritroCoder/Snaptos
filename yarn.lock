@@ -7802,6 +7802,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aes256@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "aes256@npm:1.1.0"
+  checksum: 26fe113249658b2d68aab9b6c8f8d1fe9aba884a6f4843f9b7d73f2a98d1f4f3bd4387bb5a58cabbd7009f8b883d4ec59fb9f8a81508c098934c33b0972a4426
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:6, agent-base@npm:^6.0.2":
   version: 6.0.2
   resolution: "agent-base@npm:6.0.2"
@@ -20469,6 +20476,7 @@ __metadata:
     "@mui/material": ^5.14.20
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
+    aes256: ^1.1.0
     eslint: ^8.45.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-import: ~2.26.0
@@ -21051,6 +21059,7 @@ __metadata:
     "@metamask/snaps-ui": ^3.0.1
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
+    aes256: ^1.1.0
     buffer: ^6.0.3
     eslint: ^8.45.0
     eslint-config-prettier: ^8.5.0
