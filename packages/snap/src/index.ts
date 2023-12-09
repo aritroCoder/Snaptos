@@ -28,10 +28,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin: string;
   request: {
     method: string;
-    params: {
-      to: string;
-      amount: number;
-    };
+    params: any;
   };
 }) => {
   switch (request.method) {
@@ -76,7 +73,13 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
     // send tokens
     case 'transferCoin': {
-      const { to, amount } = request.params;
+      const {
+        to,
+        amount,
+      }: {
+        to: string;
+        amount: number;
+      } = request.params;
       const result = await snap.request({
         method: 'snap_dialog',
         params: {
@@ -94,11 +97,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         break;
       }
       const ac = await getAccount();
-      console.log({ privateKey: ac.privateKey.toString() });
       const enpk = encryptPhrase(ac.privateKey.toString(), 'key');
-      console.log({ enpk });
-      const txHash = await transferCoin(to, amount, enpk);
-      console.log({ txHash });
+      const txHash: { hash: string } = await transferCoin(to, amount, enpk);
       return snap.request({
         method: 'snap_dialog',
         params: {
@@ -107,12 +107,14 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
             heading('Amount transferred successfully.'),
             text(`To: **${to}**`),
             text(`Amount: **${amount}**`),
-            text(`Transaction Hash: **${txHash}**`),
+            text(`Transaction Hash: **${txHash.hash}**`),
           ]),
         },
       });
       break;
     }
+
+    // fund account by faucet
     case 'fundMe': {
       const txHash: string = await fundMe();
       return snap.request({
@@ -127,8 +129,52 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
       break;
     }
+
+    // set data to secure storage
+    case 'setData': {
+      const {
+        pvtKey,
+        address,
+        password, // tip: use hashed password here
+      }: {
+        pvtKey: string;
+        address: string;
+        password: string;
+      } = request.params;
+      await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'update',
+          newState: { pvtKey, address, password },
+        },
+      });
+      break;
+    }
+
+    // get data from secure storage by entering correct password
+    case 'getData': {
+      const data: {
+        pvtKey: string;
+        address: string;
+        password: string;
+      } = await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'get',
+        },
+      });
+      const { password } = request.params; // send hashed password here
+      if (data.password !== password) {
+        throw new Error('Password mismatch');
+      }
+      return data;
+      break;
+    }
+
+    // get all past transactions
     case 'txnHistory': {
       const txnHistory = await getAllTxn();
+      console.log('this is txnHistory', txnHistory);
       return { txnHistory };
       break;
     }
