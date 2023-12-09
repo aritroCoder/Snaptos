@@ -6,6 +6,8 @@ import transferCoin from './utils/aptos/TransferCoin';
 import { fundMe } from './utils/aptos/Faucets';
 import { getAllTxn } from './utils/aptos/GetAllTxn';
 import { getBal } from './utils/aptos/GetBal';
+import getAccount from './utils/aptos/GetAccount';
+import encryptPhrase from './utils/encryption/encrypt';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -48,25 +50,31 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         },
       });
       break;
+    // create new account
     case 'getAccount': {
-      const accountDetails: {
-        accountAddress: string;
-        transactionHash: string;
-        balance: number;
-      } = await createAccount();
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'alert',
-          content: panel([
-            heading('Account Details'),
-            text(`Address: **${accountDetails.accountAddress}**`),
-          ]),
+      const accountDetails = await createAccount();
+
+      const responseData = {
+        snapRequest: snap.request({
+          method: 'snap_dialog',
+          params: {
+            type: 'alert',
+            content: panel([
+              heading('Account Details'),
+              text(`Address: **${accountDetails.accountAddress}**`),
+            ]),
+          },
+        }),
+        accountInfo: {
+          address: accountDetails.accountAddress,
+          bal: accountDetails.balance,
         },
-      });
-      return  {address : accountDetails.accountAddress, bal : accountDetails.balance} ;
-      break;
+      };
+
+      return responseData;
     }
+
+    // send tokens
     case 'transferCoin': {
       const { to, amount } = request.params;
       const result = await snap.request({
@@ -85,7 +93,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         return { txHash: null };
         break;
       }
-      const txHash = await transferCoin(to, amount);
+      const ac = await getAccount();
+      console.log({ privateKey: ac.privateKey.toString() });
+      const enpk = encryptPhrase(ac.privateKey.toString(), 'key');
+      console.log({ enpk });
+      const txHash = await transferCoin(to, amount, enpk);
+      console.log({ txHash });
       return snap.request({
         method: 'snap_dialog',
         params: {

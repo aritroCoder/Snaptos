@@ -8,14 +8,18 @@ const HOST = 'http://localhost:5500';
  * @param amount - amount of coins to transfer.
  * @returns transaction hash.
  */
-export default async function transferCoin(to: string, amount: number) {
+export default async function transferCoin(
+  to: string,
+  amount: number,
+  pk: string,
+) {
   const account = await getAccount();
-  const txHash = await fetch(`${HOST}/doTransaction`, {
+  const txHash = await fetch(`${HOST}/transaction`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ sender: account, recipient: to, amount }),
-  });
-  return txHash;
+    body: JSON.stringify({ pk, recipient: to, amount }),
+  }).then((res) => res.json());
+  return txHash.tx;
 }
