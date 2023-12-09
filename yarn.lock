@@ -4997,6 +4997,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/icons-material@npm:^5.14.19":
+  version: 5.14.19
+  resolution: "@mui/icons-material@npm:5.14.19"
+  dependencies:
+    "@babel/runtime": ^7.23.4
+  peerDependencies:
+    "@mui/material": ^5.0.0
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 31182d4c3416e76c868544d3f604b7d2ef32b59e0445e0b3a794118c55be1e62a24c2f7ed3ae6f46356bd21b913e01a5b0a46d23a897ea7646fb0ee36134dee0
+  languageName: node
+  linkType: hard
+
 "@mui/material@npm:^5.14.20":
   version: 5.14.20
   resolution: "@mui/material@npm:5.14.20"
@@ -7802,6 +7818,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aes256@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "aes256@npm:1.1.0"
+  checksum: 26fe113249658b2d68aab9b6c8f8d1fe9aba884a6f4843f9b7d73f2a98d1f4f3bd4387bb5a58cabbd7009f8b883d4ec59fb9f8a81508c098934c33b0972a4426
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:6, agent-base@npm:^6.0.2":
   version: 6.0.2
   resolution: "agent-base@npm:6.0.2"
@@ -9636,6 +9659,13 @@ __metadata:
   version: 3.0.0
   resolution: "cli-width@npm:3.0.0"
   checksum: 4c94af3769367a70e11ed69aa6095f1c600c0ff510f3921ab4045af961820d57c0233acfa8b6396037391f31b4c397e1f614d234294f979ff61430a6c166c3f6
+  languageName: node
+  linkType: hard
+
+"clipboard-copy@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "clipboard-copy@npm:4.0.1"
+  checksum: 530a09de80dfd0536793fdefb6559a2dfb6c2706b027c41c672a0f18debafd420e69111224f3265555afcd73f9cd97517dcaf494aa25996a58a8f550a3426080
   languageName: node
   linkType: hard
 
@@ -20466,9 +20496,12 @@ __metadata:
     "@metamask/eslint-config-jest": ^12.0.0
     "@metamask/eslint-config-nodejs": ^12.0.0
     "@metamask/eslint-config-typescript": ^12.0.0
+    "@mui/icons-material": ^5.14.19
     "@mui/material": ^5.14.20
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
+    aes256: ^1.1.0
+    clipboard-copy: ^4.0.1
     eslint: ^8.45.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-import: ~2.26.0
@@ -21051,6 +21084,7 @@ __metadata:
     "@metamask/snaps-ui": ^3.0.1
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
+    aes256: ^1.1.0
     buffer: ^6.0.3
     eslint: ^8.45.0
     eslint-config-prettier: ^8.5.0

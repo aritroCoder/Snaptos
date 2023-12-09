@@ -11,6 +11,6 @@ export async function fundMe() {
         },
         body: JSON.stringify({ address: account.accountAddress.toString() }),
       }).then((res) => res.json());
-      console.log('this is Faucet', Faucet);
-      return Faucet;
+      console.log('this is Faucet', Faucet.tx);
+      return Faucet.tx;
 }

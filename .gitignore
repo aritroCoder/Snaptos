@@ -79,3 +79,4 @@ node_modules/
 server/package-lock.json
 server/yarn.lock
 yarn.lock
+server/.yarn/

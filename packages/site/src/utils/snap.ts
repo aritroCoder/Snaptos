@@ -68,7 +68,7 @@ export const sendHello = async () => {
  * Invoke the "getAccount" method from the example snap.
  */
 export const sendGetAccount = async () => {
-  const accountData : any = await window.ethereum.request({
+  const accountData  = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -96,7 +96,7 @@ export const sendCoin = async (to: string, amount: number) => {
 };
 
 export const sendFundMe = async () => {
-  const fund = await window.ethereum.request({
+  await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -105,7 +105,6 @@ export const sendFundMe = async () => {
       },
     },
   });
-  console.log('this is fund', fund);
 }
 
 export const sendTxnHistory = async () => {
@@ -122,7 +121,7 @@ export const sendTxnHistory = async () => {
 }
 
 export const sendGetBalance = async () => {
-  const balance = await window.ethereum.request({
+  const balance : any = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,

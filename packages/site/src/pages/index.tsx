@@ -1,17 +1,15 @@
 import React from 'react';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-// import Modal from '@mui/material/Modal';
-import Modal from 'react-modal';
+import { Button, TextField, Modal, Typography, List } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Divider from '@mui/material/Divider';
 
-
-import {
-  ConnectButton,
-  InstallFlaskButton,
-  ReconnectButton,
-  SendHelloButton,
-  Card,
-} from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -24,7 +22,7 @@ import {
   sendCoin,
   sendFundMe,
   sendTxnHistory,
-  sendGetBalance
+  sendGetBalance,
 } from '../utils';
 
 const Container = styled.div`
@@ -42,6 +40,7 @@ const Container = styled.div`
     width: auto;
   }
 `;
+
 
 const Heading = styled.h1`
   margin-top: 0;
@@ -73,7 +72,12 @@ const CardContainer = styled.div`
   height: 100%;
   margin-top: 1.5rem;
 `;
-
+const CreateAccountButton = styled(Button)`
+  font-size: 1.5rem;
+  border-radius: 8px;
+  width: 200px;
+  height: 60px;
+`;
 const Notice = styled.div`
   background-color: ${({ theme }) => theme.colors.background?.alternative};
   border: 1px solid ${({ theme }) => theme.colors.border?.default};
@@ -91,6 +95,14 @@ const Notice = styled.div`
     margin-top: 1.2rem;
     padding: 1.6rem;
   }
+`;
+const StyledListContainer = styled.div`
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  height: 400px;
+  max-height: 80vh;
+  overflow: auto;
 `;
 
 const ErrorMessage = styled.div`
@@ -110,14 +122,40 @@ const ErrorMessage = styled.div`
     max-width: 100%;
   }
 `;
-
+const HorizontalButtonContainer = styled.div`
+display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+`;
+const BalanceText = styled.div`
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1.2rem;
+`;
+const AccountInfoBox = styled.div`
+border: 1px solid rgba(25, 118, 210, 0.5); 
+  border-radius: 12px; 
+  padding: 15px; 
+  margin-bottom: 20px;
+  color: black;
+  font-size: 1.2rem;  
+  width: auto;      
+  height: 10px;     
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  background-color: rgba(25, 118, 210, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const AccountModalContent = styled(DialogContent)`
+  font-size:90rem; 
+  color:#1976d2;
+  fontWeight: 'bold',
+`;
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
-  const [transferAmount, setTransferAmount] = useState(0);
-  const [reciever, setReciever] = useState('');
-  const [password, setPassword] = useState<string>('');
-  const [isPasswordSet, setIsPasswordSet] = useState<boolean>(false);
-  // const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [password, setPassword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isAccountCreated, setIsAccountCreated] = useState(false);
@@ -127,6 +165,39 @@ const Index = () => {
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? state.isFlask
     : state.snapsDetected;
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [sendAmount, setSendAmount] = useState(0);
+  const [isSendModalOpen, setIsSendModalOpen] = useState(false);
+  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+
+  const openSendModal = () => {
+    setIsSendModalOpen(true);
+  };
+
+  const closeSendModal = () => {
+    setIsSendModalOpen(false);
+  };
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+  const openConfirmDialog = () => {
+    setIsConfirmDialogOpen(true);
+  };
+
+  const closeConfirmDialog = () => {
+    setIsConfirmDialogOpen(false);
+  };
+
+  const handleRecipientChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRecipientAddress(event.target.value);
+  };
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const enteredAmount = event.target.value;
+    setSendAmount(parseFloat(enteredAmount));
+    setIsNextButtonDisabled(Number(enteredAmount) > balance);
+  };
 
   const handleConnectClick = async () => {
     try {
@@ -142,20 +213,50 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
+  const [isActivityListOpen, setIsActivityListOpen] = useState(false);
 
-  const handleSendHelloClick = async () => {
-    try {
-      await sendHello();
-    } catch (error) {
-      console.error(error);
-      dispatch({ type: MetamaskActions.SetError, payload: error });
-    }
+  const toggleActivityList = () => {
+    setIsActivityListOpen(!isActivityListOpen);
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [inputPassword, setInputPassword] = useState('');
+  const openCreateAccountModal = () => {
+    setIsCreatingAccount(true);
+  };
+
+  const closeCreateAccountModal = () => {
+    setIsCreatingAccount(false);
+    setInputPassword('');
+  };
+
+  const handleAccountClick = () => {
+    openCreateAccountModal();
+  };
+  const handleCreateAccount = () => {
+    handleSendGetAccount()
+    setIsCreatingAccount(false);
+    setIsAccountCreated(true);
+    setInputPassword('');
+  };
+
+  const handleSend = () => {
+    closeSendModal();
+    closeConfirmDialog();
+    setIsSendModalOpen(true);
+  };
   const handleSendGetAccount = async () => {
     try {
-      const accountinfo = await sendGetAccount();
-      const { address, bal } = accountinfo;
+      const accountinfo: any = await sendGetAccount();
+      const { accountInfo } = accountinfo;
+      const {address, bal} = accountInfo;
       setAddress(address);
       setBalance(bal);
       setIsAccountCreated(true);
@@ -167,7 +268,7 @@ const Index = () => {
 
   const handleCoinTransfer = async () => {
     try {
-      await sendCoin(reciever, transferAmount);
+      await sendCoin(recipientAddress, sendAmount);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -177,32 +278,14 @@ const Index = () => {
   const handleFundMeWithFaucet = async () => {
     try {
       await sendFundMe();
-      const updatedBalance = await sendGetAccount();
-      setBalance(updatedBalance.bal);
+      const updatedBalance = await sendGetBalance();
+      setBalance(updatedBalance.balance);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
 
-  const handleCreateAccountClick = () => {
-         if (isPasswordSet) {
-            handleSendGetAccount();
-            const accountAddress =
-            console.log('password is set');
-       } else {
-            const newPassword = prompt('Please enter your password:');
-            console.log('password is not set');
-            if (newPassword) {
-               setIsPasswordSet(true);
-               setPassword(newPassword);
-               handleSendGetAccount();
-               console.log('password is set');
-      }
-    }
-  };
-
-  
   const handleGetAllTransactions = async () => {
     try {
       await sendTxnHistory();
@@ -210,185 +293,185 @@ const Index = () => {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
-  }
-  
-  const getBalance = async () => {
-    try {
-      const bal = await sendGetBalance();
-    } catch (error) {
-      console.error(error);
-      dispatch({ type: MetamaskActions.SetError, payload: error });
-    }
-  }
+  };
 
   return (
     <Container>
-      <Heading>
-        Welcome to <Span>template-snap</Span>
-      </Heading>
-      <Subtitle>
-        Get started by editing <code>src/index.ts</code>
-      </Subtitle>
-      <CardContainer>
-        {state.error && (
-          <ErrorMessage>
-            <b>An error happened:</b> {state.error.message}
-          </ErrorMessage>
-        )}
-        {!isMetaMaskReady && (
-          <Card
-            content={{
-              title: 'Install',
-              description:
-                'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
-              button: <InstallFlaskButton />,
-            }}
+      <Dialog open={isSendModalOpen} onClose={closeSendModal}>
+        <DialogTitle>Send Funds</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Recipient Address"
+            value={recipientAddress}
+            onChange={handleRecipientChange}
             fullWidth
+            margin="normal"
           />
-        )}
-        {!state.installedSnap && (
-          <Card
-            content={{
-              title: 'Connect',
-              description:
-                'Get started by connecting to and installing the example snap.',
-              button: (
-                <ConnectButton
-                  onClick={handleConnectClick}
-                  disabled={!isMetaMaskReady}
-                />
-              ),
-            }}
-            disabled={!isMetaMaskReady}
+          <TextField
+            label="Amount"
+            type="number"
+            value={sendAmount}
+            onChange={handleAmountChange}
+            fullWidth
+            margin="normal"
           />
-        )}
-        {shouldDisplayReconnectButton(state.installedSnap) && (
-          <Card
-            content={{
-              title: 'Reconnect',
-              description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
-              button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
-                />
-              ),
-            }}
-            disabled={!state.installedSnap}
-          />
-        )}
-        <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        {/* <Card                  
-          content={{
-            title: 'Create Aptos Account',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleCreateAccountClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        /> */}
-      <div>
-    
-      <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
-
-      {/* Modal */}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        contentLabel="Create Aptos Account Modal"
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeSendModal}>Cancel</Button>
+          <Button onClick={handleCoinTransfer} disabled ={isNextButtonDisabled} >
+            Next
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {isModalOpen && (
+        <Dialog open={isModalOpen} onClose={closeModal}>
+          <DialogTitle>List Item Details</DialogTitle>
+          <DialogContent>
+            {/* Content for the modal */}
+            <p>Details of the selected list item...</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeModal} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+      {!isAccountCreated && ( <CreateAccountButton
+        variant="outlined"
+        onClick={handleAccountClick}
+        style={{
+          marginBottom: '20px',
+          borderRadius: '12px',
+          fontSize: '1.2rem',
+          padding: '10px 20px',
+          width: '200px',
+          fontWeight: 'bold',
+          marginTop: '10px',
+        }}
       >
-        <div>
-          <h2>Create Aptos Account</h2>
-          <p>
-            Display a custom message within a confirmation screen in MetaMask.
-          </p>
-          
-          <SendHelloButton
-            onClick={() => {
-              handleCreateAccountClick();
-              <p></p>
-              setIsModalOpen(false); 
+        Create Account
+      </CreateAccountButton>
+      )}
+      <Dialog
+        open={isCreatingAccount}
+        onClose={closeCreateAccountModal}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle style={{ fontSize: '2rem' }}>Create Account</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Enter Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+              style: { fontSize: '1.5rem' },
             }}
-            disabled={!state.installedSnap}
+            inputProps={{
+              style: { fontSize: '1.2rem' },
+            }}
           />
-        </div>
-      </Modal>
-    </div>
-
-
-
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCreateAccount} style={{ fontSize: '1.3rem' }}>
+            Create
+          </Button>
+          <Button
+            onClick={closeCreateAccountModal}
+            style={{ fontSize: '1.3rem' }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {isAccountCreated && (
         
-        <button onClick={handleFundMeWithFaucet}>Fund Me with Faucet {balance} </button>
-        <button onClick={handleGetAllTransactions}>Get All Transactions</button>
+          <AccountInfoBox>
+        <AccountModalContent>
+          <Typography variant="body1">
+            Account : {address ? address : 'Loading...'}
+          </Typography>
+          </AccountModalContent>
+        </AccountInfoBox>
+      )}
 
-        <input
-          type="text"
-          placeholder="Reciever"
-          onChange={(e) => setReciever(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Amount"
-          onChange={(e) => setTransferAmount(parseInt(e.target.value))}
-        />
-        <Card
-          content={{
-            title: 'Transfer Coin',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleCoinTransfer}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
-        </Notice>
-      </CardContainer>
+      <HorizontalButtonContainer>
+        {/* Content inside the custom Container component */}
+        <Typography variant="h3" gutterBottom style={{ textAlign: 'center' }}>
+          {balance / Math.pow(10, 8)} APT
+        </Typography>
+
+        <div style={{ display: 'flex' }}>
+          <Button variant="contained" onClick={openSendModal}>
+            SEND
+          </Button>
+          <Button variant="contained" onClick={handleFundMeWithFaucet}>
+            FAUCET
+          </Button>
+          <Button variant="contained" onClick={toggleActivityList}>
+            ACTIVITY
+          </Button>
+        </div>
+      </HorizontalButtonContainer>
+
+      <Dialog open={isConfirmDialogOpen} onClose={closeConfirmDialog} fullWidth>
+        <DialogTitle>Confirm Transaction</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Recipient Address: {recipientAddress}
+          </Typography>
+          <Typography variant="body1">Amount: {sendAmount}</Typography>
+          <Typography variant="body1">Fee: 0</Typography>
+
+          <Typography variant="body1">
+            Total Amount: {(sendAmount) + 0}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeConfirmDialog}>Back</Button>
+          <Button onClick={handleSend} color="primary">
+            Send
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {isActivityListOpen && (
+        <StyledListContainer>
+          <List
+            sx={{
+              // width: '100%',
+              // maxWidth: '90%',
+              bgcolor: 'background.paper',
+              position: 'relative',
+              overflow: 'auto',
+              maxHeight: 300,
+              '& ul': { padding: 0 },
+            }}
+            subheader={<li />}
+          >
+            {[0, 1, 2, 3, 4].map((sectionId) => (
+              <li key={`section-${sectionId}`}>
+                <ul>
+                  {[0, 1, 2].map((item) => (
+                    <ListItem button onClick={openModal}>
+                      <ListItemText
+                        primary={`Item ${item}`}
+                        style={{ color: 'black' }}
+                      />
+                    </ListItem>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </List>
+        </StyledListContainer>
+      )}
     </Container>
+    // </Container>
   );
 };
 
