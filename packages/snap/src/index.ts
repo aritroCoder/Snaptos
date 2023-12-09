@@ -28,10 +28,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin: string;
   request: {
     method: string;
-    params: {
-      to: string;
-      amount: number;
-    };
+    params: any;
   };
 }) => {
   switch (request.method) {
@@ -76,7 +73,13 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
     // send tokens
     case 'transferCoin': {
-      const { to, amount } = request.params;
+      const {
+        to,
+        amount,
+      }: {
+        to: string;
+        amount: number;
+      } = request.params;
       const result = await snap.request({
         method: 'snap_dialog',
         params: {
@@ -110,6 +113,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
       break;
     }
+
+    // fund account by faucet
     case 'fundMe': {
       const txHash: string = await fundMe();
       return snap.request({
@@ -124,6 +129,48 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
       break;
     }
+
+    // set data to secure storage
+    case 'storeData': {
+      const {
+        pvtKey,
+        address,
+        password, // tip: use hashed password here
+      }: {
+        pvtKey: string;
+        address: string;
+        password: string;
+      } = request.params;
+      await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'update',
+          newState: { pvtKey, address, password },
+        },
+      });
+      break;
+    }
+
+    // get data from secure storage by entering correct password
+    case 'getData': {
+      const data: {
+        pvtKey: string;
+        address: string;
+        password: string;
+      } = await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'get',
+        },
+      });
+      const { password } = request.params; // send hashed password here
+      if (data.password !== password) {
+        throw new Error('Password mismatch');
+      }
+      return data;
+      break;
+    }
+
     case 'txnHistory': {
       const txnHistory = await getAllTxn();
       return { txnHistory };
