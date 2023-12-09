@@ -267,8 +267,11 @@ const Index = () => {
   };
 
   const handleCoinTransfer = async () => {
+    closeSendModal();
     try {
       await sendCoin(recipientAddress, sendAmount);
+      const updatedBalance = await sendGetBalance();
+      setBalance(updatedBalance.balance);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -412,7 +415,7 @@ const Index = () => {
           <Button variant="contained" onClick={handleFundMeWithFaucet}>
             FAUCET
           </Button>
-          <Button variant="contained" onClick={toggleActivityList}>
+          <Button variant="contained" onClick={handleGetAllTransactions}>
             ACTIVITY
           </Button>
         </div>

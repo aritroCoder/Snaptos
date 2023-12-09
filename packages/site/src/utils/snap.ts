@@ -118,6 +118,7 @@ export const sendTxnHistory = async () => {
     },
   });
   console.log('this is txnHistory', txnHistory);
+  return txnHistory;
 }
 
 export const sendGetBalance = async () => {
