@@ -1,53 +1,55 @@
-# @metamask/template-snap-monorepo
+# Aptos Wallet - Metamask Snap
 
-This repository demonstrates how to develop a snap with TypeScript. For detailed
-instructions, see [the MetaMask documentation](https://docs.metamask.io/guide/snaps.html#serving-a-snap-to-your-local-environment).
+Welcome to Aptos Wallet, a revolutionary Metamask Snap that brings support for the non-EVM blockchain, Aptos. This feature-rich wallet is designed to provide users with a seamless experience for managing Aptos assets, executing transactions, and accessing various advanced functionalities, all within the familiar Metamask environment.
 
-MetaMask Snaps is a system that allows anyone to safely expand the capabilities
-of MetaMask. A _snap_ is a program that we run in an isolated environment that
-can customize the wallet experience.
+## Features
 
-## Snaps is pre-release software
+### 1. Aptos Asset Management
+Easily store, send, and receive Aptos cryptocurrency within the Metamask Snap. Our wallet ensures a secure and efficient way to manage your Aptos assets without leaving the Metamask ecosystem.
 
-To interact with (your) Snaps, you will need to install [MetaMask Flask](https://metamask.io/flask/),
-a canary distribution for developers that provides access to upcoming features.
+### 2. Faucet for Testing and Development
+Accelerate your development process with our built-in faucet. Obtain test and dev Aptos instantly for debugging and testing purposes, ensuring a smooth development experience.
 
-## Getting Started
+### 3. Gas Estimation
+No more guesswork! Aptos Wallet provides accurate gas estimation for transactions, allowing users to make informed decisions and optimize their transaction costs.
 
-Clone the template-snap repository [using this template](https://github.com/MetaMask/template-snap-monorepo/generate)
-and set up the development environment:
+### 4. Transaction Log
+Keep track of your transactions effortlessly. The transaction log provides a comprehensive overview of your Aptos transactions, enhancing transparency and accountability.
 
-```shell
-yarn install && yarn start
-```
+### 5. Real-time APT to USD Conversion
+Stay updated with real-time Aptos to USD conversion rates directly within the wallet. This feature ensures users are always aware of the current value of their Aptos holdings.
 
-## Cloning
+### 6. On-chain Account Creation
+Create Aptos accounts directly on-chain with just a few clicks. Aptos Wallet simplifies the account creation process, providing a single interface for all your account management needs.
 
-This repository contains GitHub Actions that you may find useful, see
-`.github/workflows` and [Releasing & Publishing](https://github.com/MetaMask/template-snap-monorepo/edit/main/README.md#releasing--publishing)
-below for more information.
+## How to Get Started
 
-If you clone or create this repository outside the MetaMask GitHub organization,
-you probably want to run `./scripts/cleanup.sh` to remove some files that will
-not work properly outside the MetaMask GitHub organization.
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/your-username/aptos-wallet.git
+2. **Install Dependencies:**
+   ```bash
+   yarn install
+3. **Start the Server:**
+   ```bash
+   cd server
+   npm start
+4. **Return to the Root Directory:**
+   ```bash
+   cd ..
+5. **Start the Application**
+   ```bash
+   yarn start
 
-If you don't wish to use any of the existing GitHub actions in this repository,
-simply delete the `.github/workflows` directory.
+Congratulations! You are now ready to experience the power of Aptos Wallet. Access your Aptos assets, leverage advanced features, and enjoy a streamlined user experience right within the Metamask Snap.
 
-## Contributing
+## Notations
 
-### Testing and Linting
+- **Gas Estimation:** Our sophisticated algorithm analyzes the current network conditions to provide accurate gas estimates, ensuring optimal transaction execution.
 
-Run `yarn test` to run the tests once.
+- **Real-time APT to USD Conversion:** The conversion rates are sourced from reputable APIs, offering users a reliable and up-to-date valuation of their Aptos holdings.
 
-Run `yarn lint` to run the linter, or run `yarn lint:fix` to run the linter and
-fix any automatically fixable issues.
+- **On-chain Account Creation:** Behind the scenes, Aptos Wallet leverages smart contract interactions to securely and efficiently create Aptos accounts directly on-chain.
 
-### Using NPM packages with scripts
+Feel the next-level convenience and efficiency of Aptos Wallet – your gateway to a superior Metamask experience!
 
-Scripts are disabled by default for security reasons. If you need to use NPM
-packages with scripts, you can run `yarn allow-scripts auto`, and enable the
-script in the `lavamoat.allowScripts` section of `package.json`.
-
-See the documentation for [@lavamoat/allow-scripts](https://github.com/LavaMoat/LavaMoat/tree/main/packages/allow-scripts)
-for more information.
