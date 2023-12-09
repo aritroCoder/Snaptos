@@ -10,16 +10,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Divider from '@mui/material/Divider';
 
-// import Modal from '@mui/material/Modal';
-// import Modal from 'react-modal';
-
-import {
-  ConnectButton,
-  InstallFlaskButton,
-  ReconnectButton,
-  SendHelloButton,
-  Card,
-} from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -150,7 +140,7 @@ border: 1px solid rgba(25, 118, 210, 0.5);
   margin-bottom: 20px;
   color: black;
   font-size: 1.2rem;  
-  width: 200px;      
+  width: auto;      
   height: 10px;     
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
   background-color: rgba(25, 118, 210, 0.1);
@@ -165,10 +155,7 @@ const AccountModalContent = styled(DialogContent)`
 `;
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
-  const [transferAmount, setTransferAmount] = useState(0);
-  const [reciever, setReciever] = useState('');
-  const [password, setPassword] = useState<string>('');
-  const [isPasswordSet, setIsPasswordSet] = useState<boolean>(false);
+  const [password, setPassword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isAccountCreated, setIsAccountCreated] = useState(false);
@@ -179,7 +166,7 @@ const Index = () => {
     ? state.isFlask
     : state.snapsDetected;
   const [recipientAddress, setRecipientAddress] = useState('');
-  const [sendAmount, setSendAmount] = useState('');
+  const [sendAmount, setSendAmount] = useState(0);
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
 
@@ -208,7 +195,7 @@ const Index = () => {
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const enteredAmount = event.target.value;
-    setSendAmount(enteredAmount);
+    setSendAmount(parseFloat(enteredAmount));
     setIsNextButtonDisabled(Number(enteredAmount) > balance);
   };
 
@@ -254,19 +241,12 @@ const Index = () => {
     openCreateAccountModal();
   };
   const handleCreateAccount = () => {
+    handleSendGetAccount()
     setIsCreatingAccount(false);
     setIsAccountCreated(true);
     setInputPassword('');
   };
 
-  const handleSendHelloClick = async () => {
-    try {
-      await sendHello();
-    } catch (error) {
-      console.error(error);
-      dispatch({ type: MetamaskActions.SetError, payload: error });
-    }
-  };
   const handleSend = () => {
     closeSendModal();
     closeConfirmDialog();
@@ -274,8 +254,9 @@ const Index = () => {
   };
   const handleSendGetAccount = async () => {
     try {
-      const accountinfo = await sendGetAccount();
-      const { address, bal } = accountinfo;
+      const accountinfo: any = await sendGetAccount();
+      const { accountInfo } = accountinfo;
+      const {address, bal} = accountInfo;
       setAddress(address);
       setBalance(bal);
       setIsAccountCreated(true);
@@ -287,7 +268,7 @@ const Index = () => {
 
   const handleCoinTransfer = async () => {
     try {
-      await sendCoin(reciever, transferAmount);
+      await sendCoin(recipientAddress, sendAmount);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -297,42 +278,17 @@ const Index = () => {
   const handleFundMeWithFaucet = async () => {
     try {
       await sendFundMe();
-      const updatedBalance = await sendGetAccount();
-      setBalance(updatedBalance.bal);
+      const updatedBalance = await sendGetBalance();
+      setBalance(updatedBalance.balance);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
-    }
-  };
-
-  const handleCreateAccountClick = () => {
-    if (isPasswordSet) {
-      handleSendGetAccount();
-      const accountAddress = console.log('password is set');
-    } else {
-      const newPassword = prompt('Please enter your password:');
-      console.log('password is not set');
-      if (newPassword) {
-        setIsPasswordSet(true);
-        setPassword(newPassword);
-        handleSendGetAccount();
-        console.log('password is set');
-      }
     }
   };
 
   const handleGetAllTransactions = async () => {
     try {
       await sendTxnHistory();
-    } catch (error) {
-      console.error(error);
-      dispatch({ type: MetamaskActions.SetError, payload: error });
-    }
-  };
-
-  const getBalance = async () => {
-    try {
-      const bal = await sendGetBalance();
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -362,7 +318,7 @@ const Index = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeSendModal}>Cancel</Button>
-          <Button onClick={openConfirmDialog} disabled={isNextButtonDisabled}>
+          <Button onClick={handleCoinTransfer} disabled ={isNextButtonDisabled} >
             Next
           </Button>
         </DialogActions>
@@ -381,7 +337,7 @@ const Index = () => {
           </DialogActions>
         </Dialog>
       )}
-      <CreateAccountButton
+      {!isAccountCreated && ( <CreateAccountButton
         variant="outlined"
         onClick={handleAccountClick}
         style={{
@@ -396,6 +352,7 @@ const Index = () => {
       >
         Create Account
       </CreateAccountButton>
+      )}
       <Dialog
         open={isCreatingAccount}
         onClose={closeCreateAccountModal}
@@ -436,7 +393,7 @@ const Index = () => {
           <AccountInfoBox>
         <AccountModalContent>
           <Typography variant="body1">
-            Account : {address ? address : 'Not available'}
+            Account : {address ? address : 'Loading...'}
           </Typography>
           </AccountModalContent>
         </AccountInfoBox>
@@ -445,7 +402,7 @@ const Index = () => {
       <HorizontalButtonContainer>
         {/* Content inside the custom Container component */}
         <Typography variant="h3" gutterBottom style={{ textAlign: 'center' }}>
-          {balance} APT
+          {balance / Math.pow(10, 8)} APT
         </Typography>
 
         <div style={{ display: 'flex' }}>
@@ -471,7 +428,7 @@ const Index = () => {
           <Typography variant="body1">Fee: 0</Typography>
 
           <Typography variant="body1">
-            Total Amount: {parseInt(sendAmount) + 0}
+            Total Amount: {(sendAmount) + 0}
           </Typography>
         </DialogContent>
         <DialogActions>

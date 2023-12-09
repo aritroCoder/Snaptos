@@ -20,6 +20,6 @@ export default async function transferCoin(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ pk, recipient: to, amount }),
-  });
-  return txHash;
+  }).then((res) => res.json());
+  return txHash.tx;
 }

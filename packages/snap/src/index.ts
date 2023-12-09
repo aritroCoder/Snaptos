@@ -52,27 +52,28 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       break;
     // create new account
     case 'getAccount': {
-      const accountDetails: {
-        accountAddress: string;
-        transactionHash: string;
-        balance: number;
-      } = await createAccount();
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'alert',
-          content: panel([
-            heading('Account Details'),
-            text(`Address: **${accountDetails.accountAddress}**`),
-          ]),
+      const accountDetails = await createAccount();
+
+      const responseData = {
+        snapRequest: snap.request({
+          method: 'snap_dialog',
+          params: {
+            type: 'alert',
+            content: panel([
+              heading('Account Details'),
+              text(`Address: **${accountDetails.accountAddress}**`),
+            ]),
+          },
+        }),
+        accountInfo: {
+          address: accountDetails.accountAddress,
+          bal: accountDetails.balance,
         },
-      });
-      return {
-        address: accountDetails.accountAddress,
-        bal: accountDetails.balance,
       };
-      break;
+
+      return responseData;
     }
+
     // send tokens
     case 'transferCoin': {
       const { to, amount } = request.params;
