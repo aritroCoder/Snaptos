@@ -131,7 +131,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     }
 
     // set data to secure storage
-    case 'storeData': {
+    case 'setData': {
       const {
         pvtKey,
         address,
@@ -171,8 +171,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       break;
     }
 
+    // get all past transactions
     case 'txnHistory': {
       const txnHistory = await getAllTxn();
+      console.log('this is txnHistory', txnHistory);
       return { txnHistory };
       break;
     }
