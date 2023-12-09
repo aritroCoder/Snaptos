@@ -8,7 +8,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ReactComponent as Faucet } from '../assets/faucet.svg';
 
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
@@ -24,6 +28,8 @@ import {
   sendTxnHistory,
   sendGetBalance,
 } from '../utils';
+import { Card, SendHelloButton } from '../components';
+import SendIcon from '@mui/icons-material/Send';
 
 const Container = styled.div`
   display: flex;
@@ -42,6 +48,8 @@ const Container = styled.div`
 `;
 
 
+const darkTheme = createTheme({ palette: { mode: 'dark' } });
+const lightTheme = createTheme({ palette: { mode: 'light' } });
 const Heading = styled.h1`
   margin-top: 0;
   margin-bottom: 2.4rem;
@@ -66,17 +74,26 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   max-width: 64.8rem;
   width: 100%;
   height: 100%;
   margin-top: 1.5rem;
 `;
 const CreateAccountButton = styled(Button)`
-  font-size: 1.5rem;
-  border-radius: 8px;
-  width: 200px;
-  height: 60px;
+font-size: 1.5rem;
+border-radius: 8px;
+width: 200px;
+height: 40px;
+margin-top: 50px; 
+align-self: center; 
+display: flex;
+justify-content: center;
+align-items: center;
+position: absolute;
+top: 10px; 
+left: 50%; 
+transform: translateX(-50%);
 `;
 const Notice = styled.div`
   background-color: ${({ theme }) => theme.colors.background?.alternative};
@@ -123,10 +140,10 @@ const ErrorMessage = styled.div`
   }
 `;
 const HorizontalButtonContainer = styled.div`
-display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 60px;
 `;
 const BalanceText = styled.div`
   text-align: center;
@@ -134,9 +151,9 @@ const BalanceText = styled.div`
   font-size: 1.2rem;
 `;
 const AccountInfoBox = styled.div`
-border: 1px solid rgba(25, 118, 210, 0.5); 
-  border-radius: 12px; 
-  padding: 15px; 
+  border: 1px solid rgba(25, 118, 210, 0.5);
+  border-radius: 12px;
+  padding: 15px;
   margin-bottom: 20px;
   color: black;
   font-size: 1.2rem;  
@@ -147,18 +164,21 @@ border: 1px solid rgba(25, 118, 210, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  
 `;
 const AccountModalContent = styled(DialogContent)`
-  font-size:90rem; 
-  color:#1976d2;
-  fontWeight: 'bold',
+  font-size: 90rem;
+  color: #1976d2;
+  fontweight: 'bold';
 `;
+
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [password, setPassword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isAccountCreated, setIsAccountCreated] = useState(false);
+  const [showCreateAccountCard, setShowCreateAccountCard] = useState(true);
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState(0);
 
@@ -186,7 +206,11 @@ const Index = () => {
   const closeConfirmDialog = () => {
     setIsConfirmDialogOpen(false);
   };
-
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputVal = e.target.value;
+    setInputPassword(inputVal);
+    setIsNextButtonDisabled(inputVal === '');
+  };
   const handleRecipientChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -245,6 +269,7 @@ const Index = () => {
     setIsCreatingAccount(false);
     setIsAccountCreated(true);
     setInputPassword('');
+    setShowCreateAccountCard(false);
   };
 
   const handleSend = () => {
@@ -277,7 +302,11 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
-
+  useEffect(() => {
+    if (!isCreatingAccount) {
+      setPassword('');
+    }
+  }, [isCreatingAccount]);
   const handleFundMeWithFaucet = async () => {
     try {
       await sendFundMe();
@@ -300,6 +329,36 @@ const Index = () => {
 
   return (
     <Container>
+      <Heading>
+        Welcome to <Span>Aptos-snap</Span>
+      </Heading>
+      <CardContainer>
+        {state.error && (
+          <ErrorMessage>
+            <b>An error happened:</b> {state.error.message}
+          </ErrorMessage>
+        )}
+         {showCreateAccountCard && !isAccountCreated && (
+        <Card
+        content={{
+          title: 'Create Aptos Account',
+          description:
+            '#############',
+          button: (
+            <SendHelloButton
+              onClick={handleAccountClick}
+              disabled={!state.installedSnap}
+            />
+          ),
+        }}
+        disabled={!state.installedSnap}
+        fullWidth={
+          isMetaMaskReady &&
+          Boolean(state.installedSnap) &&
+          !shouldDisplayReconnectButton(state.installedSnap)
+        }
+      /> )}
+      </CardContainer>
       <Dialog open={isSendModalOpen} onClose={closeSendModal}>
         <DialogTitle>Send Funds</DialogTitle>
         <DialogContent>
@@ -340,35 +399,41 @@ const Index = () => {
           </DialogActions>
         </Dialog>
       )}
-      {!isAccountCreated && ( <CreateAccountButton
+      {/* {!isAccountCreated && ( <CreateAccountButton
         variant="outlined"
         onClick={handleAccountClick}
         style={{
           marginBottom: '20px',
           borderRadius: '12px',
-          fontSize: '1.2rem',
+          fontSize: '1.8rem',
           padding: '10px 20px',
-          width: '200px',
+          width: '250px',
           fontWeight: 'bold',
-          marginTop: '10px',
+          marginTop: 'auto',
+          height:'40px',
+          flex: 1, display: 'flex', justifyContent: 'center',
+           alignItems: 'center', flexDirection: 'column' 
+
         }}
       >
         Create Account
       </CreateAccountButton>
-      )}
+      )} */}
       <Dialog
         open={isCreatingAccount}
         onClose={closeCreateAccountModal}
         fullWidth
         maxWidth="sm"
+        
       >
         <DialogTitle style={{ fontSize: '2rem' }}>Create Account</DialogTitle>
         <DialogContent>
           <TextField
             label="Enter Password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={inputPassword}
+            onChange={handlePasswordChange}
+            
             fullWidth
             margin="normal"
             InputLabelProps={{
@@ -380,7 +445,7 @@ const Index = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCreateAccount} style={{ fontSize: '1.3rem' }}>
+          <Button onClick={handleCreateAccount} disabled={isNextButtonDisabled} style={{ fontSize: '1.3rem' }}>
             Create
           </Button>
           <Button
@@ -392,15 +457,21 @@ const Index = () => {
         </DialogActions>
       </Dialog>
       {isAccountCreated && (
-        
-          <AccountInfoBox>
-        <AccountModalContent>
-          <Typography variant="body1">
-            Account : {address ? address : 'Loading...'}
-          </Typography>
+        <>
+        <Paper elevation={24} style={{ width: '800px', height: '450px', margin: '20px', padding: '10px', borderRadius: '15px' }}>
+      
+      
+        <AccountInfoBox style={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, 29%)' 
+        }}>
+          <AccountModalContent>
+            <Typography variant="body1">
+              Account : {address ? address : 'Loading...'}
+            </Typography>
           </AccountModalContent>
         </AccountInfoBox>
-      )}
+      
+     
 
       <HorizontalButtonContainer>
         {/* Content inside the custom Container component */}
@@ -409,13 +480,15 @@ const Index = () => {
         </Typography>
 
         <div style={{ display: 'flex' }}>
-          <Button variant="contained" onClick={openSendModal}>
+          <Button variant="contained" onClick={openSendModal} style={{ backgroundColor: '#6F4CFF', color: 'white', marginRight: '10px' }}>
+            <SendIcon />
             SEND
           </Button>
-          <Button variant="contained" onClick={handleFundMeWithFaucet}>
-            FAUCET
+          <Button variant="contained" onClick={handleFundMeWithFaucet} style={{ backgroundColor: '#6F4CFF', color: 'white', marginRight: '10px' }}>
+            <Faucet/>
+             FAUCET
           </Button>
-          <Button variant="contained" onClick={handleGetAllTransactions}>
+          <Button variant="contained" onClick={toggleActivityList} style={{ backgroundColor: '#6F4CFF', color: 'white' }}>
             ACTIVITY
           </Button>
         </div>
@@ -472,8 +545,9 @@ const Index = () => {
             ))}
           </List>
         </StyledListContainer>
-      )}
+      )}</Paper></>)}
     </Container>
+    
     // </Container>
   );
 };

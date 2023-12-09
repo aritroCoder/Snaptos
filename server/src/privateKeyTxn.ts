@@ -21,7 +21,7 @@ export async function privateKeyTxn(request: Request) {
   const key = 'key';
   console.log({ pk, recipient, amount });
   const decryptedKey: string = decryptPhrase(pk, key);
-  console.log('Encrypted Text:', decryptedKey);
+  console.log('Decrypted Text:', decryptedKey);
 
   const privateKey = new Ed25519PrivateKey(decryptedKey);
   const account = Account.fromPrivateKey({ privateKey });

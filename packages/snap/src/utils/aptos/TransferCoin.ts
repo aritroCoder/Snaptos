@@ -1,3 +1,4 @@
+/* eslint-disable  */
 import getAccount from './GetAccount';
 
 const HOST = 'http://localhost:5500';
@@ -20,6 +21,6 @@ export default async function transferCoin(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ pk, recipient: to, amount }),
-  }).then((res) => res.json());
+  }).then(async (res) => res.json());
   return txHash.tx;
 }
