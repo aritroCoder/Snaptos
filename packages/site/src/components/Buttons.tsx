@@ -95,8 +95,11 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
-export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
+export const CreateAccountButton = (props: ComponentProps<typeof Button>) => {
   return <Button {...props}>Create Account</Button>;
+};
+export const LoginAccountButton = (props: ComponentProps<typeof Button>) => {
+  return <Button {...props}>Login Account</Button>;
 };
 
 export const HeaderButtons = ({

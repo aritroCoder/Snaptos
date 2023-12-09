@@ -80,3 +80,5 @@ server/package-lock.json
 server/yarn.lock
 yarn.lock
 server/.yarn/
+
+packages/snap/snap.manifest.json

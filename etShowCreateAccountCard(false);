@@ -1,0 +1,277 @@
+[33mcommit 78ce55210e14a3fe5ea171d94400af2c2310290f[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Merge: 5654764 0ce7a5c
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Sat Dec 9 22:25:45 2023 +0530
+
+    merge conflict resolved
+
+[33mcommit 56547645d570e0b2eca0d0dadceb7679de2617a9[m
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Sat Dec 9 22:21:42 2023 +0530
+
+    merge issue
+
+[33mcommit 0ce7a5c8db8d336366c4bfb39c3b54395ad80878[m
+Merge: d49b935 0307df8
+Author: PS2609 <sharmapriyanshi178@gmail.com>
+Date:   Sat Dec 9 22:16:18 2023 +0530
+
+    Modified Ui
+
+[33mcommit d49b9353d9ea190c50374953cf1f3fc480f46f97[m
+Author: PS2609 <sharmapriyanshi178@gmail.com>
+Date:   Sat Dec 9 22:13:47 2023 +0530
+
+    modified UI
+
+[33mcommit 0307df896aa4aa7fe92db361c24707c84cadff68[m
+Author: Kartikay <kartikay_2101ce32@iitp.ac.in>
+Date:   Sat Dec 9 21:30:55 2023 +0530
+
+    nit
+    
+    Signed-off-by: Kartikay <kartikay_2101ce32@iitp.ac.in>
+
+[33mcommit 5f64d9ca0e200550e9b2d4572ddfb3fbafdb6b70[m
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Sat Dec 9 20:56:26 2023 +0530
+
+    added getTxnHistry feature
+    
+    Signed-off-by: aritroCoder <ogcodinggod@gmail.com>
+
+[33mcommit 99f1e6df807bcf942db5e426e66e556a9d048f3b[m
+Merge: c00bce0 c60335e
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Sat Dec 9 20:47:41 2023 +0530
+
+    Merge branch 'main' of https://github.com/aritroCoder/Aptos-snap
+
+[33mcommit c00bce0b4feccd92487f2c3355883d732c849723[m
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Sat Dec 9 20:47:31 2023 +0530
+
+    added secure storage facility
+    
+    Signed-off-by: aritroCoder <ogcodinggod@gmail.com>
+
+[33mcommit 9dc6717c634bf1b1ffec270904913392d408433a[m
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Sat Dec 9 20:03:17 2023 +0530
+
+    send apt working
+    
+    Signed-off-by: aritroCoder <ogcodinggod@gmail.com>
+
+[33mcommit c60335e7519a64837eb4ff44337c5fd40cfb2582[m
+Merge: 438bdc7 d0c8574
+Author: Hemant Chaurasia <115251521+hemantchaurasia2004@users.noreply.github.com>
+Date:   Sat Dec 9 18:13:37 2023 +0530
+
+    Merge pull request #27 from hemantchaurasia2004/main
+    
+    Updated ReadMe
+
+[33mcommit d0c85744124b37935754f05fe373502bc99d51d6[m
+Merge: 97340c5 438bdc7
+Author: Hemant Chaurasia <115251521+hemantchaurasia2004@users.noreply.github.com>
+Date:   Sat Dec 9 18:12:43 2023 +0530
+
+    Merge branch 'aritroCoder:main' into main
+
+[33mcommit 97340c50f738332809a6430554eb658bb089afe6[m
+Author: Hemant Chaurasia <115251521+hemantchaurasia2004@users.noreply.github.com>
+Date:   Sat Dec 9 18:12:25 2023 +0530
+
+    Update README.md
+
+[33mcommit 171271ab9b34330efe35f11f96df05b658a6a41c[m
+Merge: 5544018 438bdc7
+Author: PS2609 <sharmapriyanshi178@gmail.com>
+Date:   Sat Dec 9 17:12:10 2023 +0530
+
+    merger conflict
+
+[33mcommit 554401897fe61e8f6d55157cfe560f993daebef8[m
+Author: PS2609 <sharmapriyanshi178@gmail.com>
+Date:   Sat Dec 9 17:02:36 2023 +0530
+
+    box added and  more update in ui
+
+[33mcommit 438bdc7b09af5221839125dd073c433cddf88c69[m
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Sat Dec 9 16:34:24 2023 +0530
+
+    aw
+    
+    Signed-off-by: aritroCoder <ogcodinggod@gmail.com>
+
+[33mcommit ec4694c5a3d8bad70ae4dccbbb27ce2ca4c95bde[m
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Sat Dec 9 15:18:06 2023 +0530
+
+    createAccount faucet button working (sendcoin button error)
+
+[33mcommit d597a22fd59f580c52f3e6c3c277dae2c56e6c8b[m
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Sat Dec 9 11:55:53 2023 +0530
+
+    fixed yarn error
+    
+    Signed-off-by: aritroCoder <ogcodinggod@gmail.com>
+
+[33mcommit d3b200980462268712de60cc1f0646299f5cdc8f[m
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Sat Dec 9 10:11:39 2023 +0530
+
+    transfer coin encrypted
+    
+    Signed-off-by: aritroCoder <ogcodinggod@gmail.com>
+
+[33mcommit 4fe9207b5111c8a040c43e8e25bc9337d87ded45[m
+Merge: 572bf7f 355aac2
+Author: PS2609 <sharmapriyanshi178@gmail.com>
+Date:   Sat Dec 9 03:20:46 2023 +0530
+
+    updated UI
+
+[33mcommit 572bf7f682399ad5f2bb4c93df22208c6dbab465[m
+Merge: f00c71b acfae40
+Author: PS2609 <sharmapriyanshi178@gmail.com>
+Date:   Fri Dec 8 17:16:01 2023 +0530
+
+    merge conflict
+
+[33mcommit 355aac20e5d4af84699de2ca7a0798e8193d736b[m
+Merge: acfae40 f412732
+Author: Hemant Chaurasia <115251521+hemantchaurasia2004@users.noreply.github.com>
+Date:   Fri Dec 8 17:13:55 2023 +0530
+
+    Merge pull request #26 from hemantchaurasia2004/main
+    
+    Added GetTransByHash
+
+[33mcommit f41273220ccf19e34a5b902db055bf74aca0665f[m
+Merge: a94ed37 acfae40
+Author: Hemant Chaurasia <hemantchaurasia2004@gmail.com>
+Date:   Fri Dec 8 17:11:27 2023 +0530
+
+    merger conflict solved
+
+[33mcommit f00c71b50490dbc075902ad2790271b06d5f4324[m
+Author: PS2609 <sharmapriyanshi178@gmail.com>
+Date:   Fri Dec 8 17:03:46 2023 +0530
+
+     ui compnent added
+
+[33mcommit a94ed3742a9d436f9f5068fd75fc0be871fd4b82[m
+Author: Hemant Chaurasia <hemantchaurasia2004@gmail.com>
+Date:   Fri Dec 8 17:02:38 2023 +0530
+
+    Added GetTransByHash
+
+[33mcommit acfae4074641521bcad8dd0b97c7e40287040782[m
+Merge: 0a9304c de3b9b3
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Fri Dec 8 16:39:12 2023 +0530
+
+    merge conflict solved
+
+[33mcommit 0a9304c4992c030102485d081c8d1f648631bfb3[m
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Fri Dec 8 16:35:01 2023 +0530
+
+    snap and site update bal,faucet,account
+
+[33mcommit de3b9b3a21dd05d114b5ae6179b0e206f7a95993[m
+Author: aritroCoder <ogcodinggod@gmail.com>
+Date:   Fri Dec 8 13:55:31 2023 +0530
+
+    added create ac confirmatipon
+    
+    Signed-off-by: aritroCoder <ogcodinggod@gmail.com>
+
+[33mcommit 11982baadc98868e52ce8a3752b6c7deb09b9c0e[m
+Merge: 0289b6f 37ad467
+Author: Kartikay <120778728+kartikaysaxena@users.noreply.github.com>
+Date:   Fri Dec 8 11:28:26 2023 +0530
+
+    Merge pull request #25 from kartikaysaxena/main
+    
+    Added endpoint for gasPriceEstimate
+
+[33mcommit 37ad467130b81b2ba08e02a6e808f9e94d6b0a74[m
+Author: Kartikay <kartikay_2101ce32@iitp.ac.in>
+Date:   Fri Dec 8 11:27:34 2023 +0530
+
+    Added endpoint for gasPriceEstimate
+    
+    Signed-off-by: Kartikay <kartikay_2101ce32@iitp.ac.in>
+
+[33mcommit 0289b6f7a64616175233308e4ab779fb4608a831[m
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Thu Dec 7 21:57:09 2023 +0530
+
+    getalltrans in snap added
+
+[33mcommit 017a924f751115f87dead03a978066b35fd6cbf3[m
+Merge: fa7ab54 898dd99
+Author: Raunak Kumar Gupta <95216822+raunak-dev-edu@users.noreply.github.com>
+Date:   Thu Dec 7 17:45:22 2023 +0530
+
+    Merge pull request #24 from hemantchaurasia2004/main
+    
+    faucet button added
+
+[33mcommit 898dd99f6bcf42ee4ac4a7aba326c23028573737[m
+Author: Hemant Chaurasia <hemantchaurasia2004@gmail.com>
+Date:   Thu Dec 7 17:42:52 2023 +0530
+
+    faucet button added
+
+[33mcommit fa7ab5402a4083533ec9d22615571105a803c6f4[m
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Thu Dec 7 15:40:15 2023 +0530
+
+    getTxn root added
+
+[33mcommit 06c42aeb13407e94724c1595a3487f6e8e24fbe2[m
+Merge: 813064e 121203c
+Author: raunak-dev-edu <raunak_2101cb47@iitp.ac.in>
+Date:   Thu Dec 7 15:33:56 2023 +0530
+
+    merge conflict resolved
+
+[33mcommit 121203cfc7d0f4363eeb5e76f664dea69d927164[m
+Merge: 05faf22 b1a834e
+Author: Kartikay <120778728+kartikaysaxena@users.noreply.github.com>
+Date:   Thu Dec 7 16:14:50 2023 +0530
+
+    Merge pull request #23 from kartikaysaxena/main
+    
+    recover cleanup.sh
+
+[33mcommit b1a834ec5106845e34c072e2a310e8c1415edd14[m
+Author: Kartikay <kartikay_2101ce32@iitp.ac.in>
+Date:   Thu Dec 7 16:14:09 2023 +0530
+
+    recover cleanup.sh
+    
+    Signed-off-by: Kartikay <kartikay_2101ce32@iitp.ac.in>
+
+[33mcommit 05faf22739d1faca40841d92c1f491f7dae7ffc4[m
+Merge: 905da76 bd1f3b5
+Author: Hemant Chaurasia <115251521+hemantchaurasia2004@users.noreply.github.com>
+Date:   Thu Dec 7 16:10:32 2023 +0530
+
+    Merge pull request #22 from hemantchaurasia2004/main
+    
+    "Faucet Installed"
+
+[33mcommit bd1f3b5585d3a632d88ac23d9242c38f09ba042d[m
+Author: Hemant Chaurasia <hemantchaurasia2004@gmail.com>
+Date:   Thu Dec 7 16:05:17 2023 +0530
+
+    Faucet Installed
+    
+    Signed-off-by: He

@@ -135,4 +135,33 @@ export const sendGetBalance = async () => {
   return balance;
 }
 
+export const sendSetData = async (pvtKey: string, address: string, password: string) => {
+  await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'setData',
+        params: { pvtKey, address, password },
+      },
+    },
+  });
+}
+
+export const sendGetData = async (password: string) => {
+  const data = await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'getData',
+        params: { password },
+      },
+    },
+  });
+  console.log('this is data', data);
+  return data;
+}
+
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

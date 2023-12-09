@@ -13,5 +13,5 @@ export async function getAllTxn() {
   });
   const txnData = await txnHistory.json();
   console.log('this is txnhistory', txnData);
-  return txnHistory;
+  return txnData;
 }

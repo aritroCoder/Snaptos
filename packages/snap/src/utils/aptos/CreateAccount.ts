@@ -11,9 +11,10 @@ const HOST = 'http://localhost:5500';
  * @throws {Error} If the account could not be created.
  */
 export default async function createAccount(): Promise<{
-  balance : number
+  balance: number;
   transactionHash: any;
   accountAddress: string;
+  privateKey: string;
 }> {
   const keypair = await getAptosEntropy();
   if (!keypair.privateKey) {
@@ -34,10 +35,9 @@ export default async function createAccount(): Promise<{
     },
     body: JSON.stringify({
       address: account.accountAddress.toString(),
-      amt: 20000000
+      amt: 20000000,
     }),
-  })
-  .then(res => res.json())
+  }).then((res) => res.json());
   const balance = await fetch(`${HOST}/getBalance`, {
     method: 'POST',
     headers: {
@@ -47,8 +47,9 @@ export default async function createAccount(): Promise<{
   }).then((res) => res.json());
   const bal = balance[0].amount;
   return {
-    balance:bal,
+    balance: bal,
     transactionHash: txn,
     accountAddress: account.accountAddress.toString(),
+    privateKey: keypair.privateKey.toString(),
   };
 }
