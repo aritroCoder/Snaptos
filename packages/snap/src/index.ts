@@ -50,6 +50,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     // create new account
     case 'getAccount': {
       const accountDetails = await createAccount();
+      const { password } = request.params;
 
       const responseData = {
         snapRequest: snap.request({
@@ -68,6 +69,17 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         },
       };
 
+      await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'update',
+          newState: {
+            pvtKey: accountDetails.privateKey,
+            address: accountDetails.accountAddress,
+            password,
+          },
+        },
+      });
       return responseData;
     }
 
