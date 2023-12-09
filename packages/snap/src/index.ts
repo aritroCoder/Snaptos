@@ -94,11 +94,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         break;
       }
       const ac = await getAccount();
-      const txHash = await transferCoin(
-        to,
-        amount,
-        encryptPhrase(ac.privateKey.toString(), 'key'),
-      );
+      console.log({ privateKey: ac.privateKey.toString() });
+      const enpk = encryptPhrase(ac.privateKey.toString(), 'key');
+      console.log({ enpk });
+      const txHash = await transferCoin(to, amount, enpk);
+      console.log({ txHash });
       return snap.request({
         method: 'snap_dialog',
         params: {
