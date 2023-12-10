@@ -2,7 +2,27 @@
 import React from 'react';
 import { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Modal, Typography, List, Dialog, TableBody, TableCell, TableHead, TableRow, TableContainer, Table } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Modal,
+  Typography,
+  List,
+  Dialog,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableContainer,
+  Table,
+} from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
+import ArrowDropDownCircleOutlinedIcon from '@mui/icons-material/ArrowDropDownCircleOutlined';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import IconButton from '@mui/material/IconButton';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,7 +33,8 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ReactComponent as Faucet } from '../assets/faucet.svg';
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -30,7 +51,12 @@ import {
   sendSetData,
   sendGetData,
 } from '../utils';
-import { Card, LoginAccountButton, CreateAccountButton, SnapLogo } from '../components';
+import {
+  Card,
+  LoginAccountButton,
+  CreateAccountButton,
+  SnapLogo,
+} from '../components';
 import SendIcon from '@mui/icons-material/Send';
 import { SHA256 } from 'crypto-js';
 
@@ -145,7 +171,13 @@ const HorizontalButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60px;
+  margin-top: 80px;
+  font: Roboto;
+  font-size: 32px;
+  font-weight: 100;
+  line-height: 38px;
+  letter-spacing: 0em;
+  text-align: left;
 `;
 const BalanceText = styled.div`
   text-align: center;
@@ -153,19 +185,32 @@ const BalanceText = styled.div`
   font-size: 1.2rem;
 `;
 const AccountInfoBox = styled.div`
-  border: 1px solid rgba(25, 118, 210, 0.5);
-  border-radius: 12px;
-  padding: 15px;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
   margin-bottom: 20px;
-  color: black;
+  color: #001A5D;
   font-size: 1.2rem;
-  width: auto;
+  width: 405px;
   height: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: rgba(25, 118, 210, 0.1);
+  
+  background-color: #D5E6FF;
   display: flex;
   align-items: center;
   justify-content: center;
+  font: Roboto;
+font-size: 12px;
+font-weight: 300;
+line-height: 14px;
+letter-spacing: 0em;
+text-align: left;
+width: 463px
+height: 35px
+top: 100px
+left: 289px
+border-radius: 15px
+
+
 `;
 const AccountModalContent = styled(DialogContent)`
   font-size: 90rem;
@@ -198,22 +243,37 @@ const Index = () => {
 
   const milliToDate = (milli) => {
     const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
     let numberString = milli.toString();
     let result = numberString.slice(0, -3);
     let resultNumber = parseFloat(result);
     const date = new Date(resultNumber);
-    const time = date.getDate() + " " + monthNames[date.getMonth()] + " " +  date.getFullYear();
+    const time =
+      date.getDate() +
+      ' ' +
+      monthNames[date.getMonth()] +
+      ' ' +
+      date.getFullYear();
     return time;
-  }
-  
+  };
+
   const handleOpen = () => {
     setOpen(true);
   };
-  
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -385,11 +445,32 @@ const Index = () => {
     }
   };
 
+  /*DROP-DOWN LOGIC*/
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedNetwork, setSelectedNetwork] = useState('mainnet');
+
+  const handleDropdownClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleDropdownClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleNetworkSelect = (network) => {
+    setSelectedNetwork(network);
+    handleDropdownClose();
+    // Add logic here to handle the selected network (e.g., switch network configuration)
+  };
   return (
     <Container>
       <Heading>
-        Welcome to <Span>Aptos-snap</Span>
+        Welcome to <Span>SnapTos</Span>
       </Heading>
+      <Typography variant="h5" gutterBottom style={{font:'Roboto',fontSize:'18px'}}>
+        Integrate Aptos Blockchain with metamask
+      </Typography>
       <CardContainer>
         {state.error && (
           <ErrorMessage>
@@ -521,32 +602,148 @@ const Index = () => {
       {isAccount && (
         <>
           <Paper
-            elevation={24}
+            elevation={8}
             style={{
               width: '800px',
               height: '450px',
               margin: '20px',
-              padding: '10px',
+              padding: '20px',
               borderRadius: '15px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              position: 'relative',
             }}
           >
+            {' '}
+            
+            <ArrowDropDownCircleOutlinedIcon
+              style={{
+                position: 'absolute',
+                top: '15px',
+                left: '20px',
+                fontSize: 32,
+                color: '#ccc',
+              }}
+              onClick={handleDropdownClick}
+            />
+            <div
+              style={{
+                font: 'Roboto',
+                marginLeft: '-650px',
+                fontSize: '14px',
+                border: '1px solid #000',
+                padding: '3px 6px',
+                borderRadius: '15px',
+              }}
+            >
+              {selectedNetwork.toUpperCase()}{' '}
+              {/* Display the selected network in uppercase */}
+            </div>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleDropdownClose}
+            >
+              <MenuItem
+                onClick={() => handleNetworkSelect('mainnet')}
+                sx={{ fontSize: '20px', font: 'Roboto' }}
+              >
+                Mainnet
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleNetworkSelect('testnet')}
+                sx={{ fontSize: '20px', font: 'Roboto' }}
+              >
+                Testnet
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleNetworkSelect('devnet')}
+                sx={{ fontSize: '20px', font: 'Roboto' }}
+              >
+                Devnet
+              </MenuItem>
+            </Menu>
+            <OpenInNewIcon
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '20px',
+                width: '25px',
+                height: '25px',
+                color: '#ccc',
+              }}
+              onClick={() => {
+                window.open(
+                  'https://explorer.aptoslabs.com/account/',
+                  '_blank',
+                );
+              }}
+            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '20px',
+                position: 'relative',
+              }}
+            >
+              <AccountCircleIcon
+                style={{
+                  width: '25px',
+                  height: '25px',
+                  marginRight: '-33px',
+                  color: '#434343',
+                  marginTop: '-32px',
+                }}
+              />
+
+              <Typography
+                variant="h4"
+                gutterBottom
+                style={{
+                  font: 'Roboto',
+                  fontSize: '24px',
+                  fontWeight: 530,
+                  marginLeft: '40px',
+                  color: '#000000',
+                  marginTop: '-25px'
+                }}
+              >
+                Aptos Account
+              </Typography>
+            </div>{' '}
+            <hr
+              style={{
+                width: '100% ',
+                margin: '0 auto',
+                borderBottom: '0.2px solid #ccc',
+                boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.2)',
+                marginTop: '-15px',
+              }}
+            />
             <AccountInfoBox
               style={{
                 position: 'absolute',
-                top: '50%',
+                top: '15%',
                 left: '50%',
-                transform: 'translate(-50%, 29%)',
+                transform: 'translate(-50%, 50%)',
               }}
             >
               <AccountModalContent>
-                <Typography variant="body1">
-                  Account : {address ? address : 'Loading...'}
-                </Typography>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="body1">
+                    {address ? address : 'Loading...'}
+                  </Typography>
+                  <ContentCopyIcon
+                    style={{ marginLeft: '8px', cursor: 'pointer' }}
+                    onClick={() => {}}
+                  />
+                </div>
               </AccountModalContent>
             </AccountInfoBox>
-
             <HorizontalButtonContainer>
-              {/* Content inside the custom Container component */}
               <Typography
                 variant="h3"
                 gutterBottom
@@ -560,70 +757,123 @@ const Index = () => {
                   variant="contained"
                   onClick={openSendModal}
                   style={{
-                    backgroundColor: '#6F4CFF',
+                    width: '94px',
+                    height: '32px',
+                    position: 'absolute',
+                    top: '205px',
+                    left: '240px',
+                    borderRadius: '10px',
+                    background: '#2F81FC',
                     color: 'white',
-                    marginRight: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0',
+                    fontSize: '12px',
+                    font: 'Roboto',
                   }}
                 >
-                  <SendIcon />
+                  <SendIcon style={{ marginRight: '5px' }} />
                   SEND
                 </Button>
                 <Button
                   variant="contained"
                   onClick={handleFundMeWithFaucet}
                   style={{
-                    backgroundColor: '#6F4CFF',
+                    width: '105px',
+                    height: '32px',
+                    position: 'absolute',
+                    top: '205px',
+                    left: '351px',
+                    borderRadius: '10px',
+                    font: 'Roboto',
+                    fontSize: '12px',
+                    fontWeight: '400',
+                    lineHeight: '18px',
+                    letterSpacing: '0em',
+                    textAlign: 'left',
+                    background: '#2F81FC',
                     color: 'white',
-                    marginRight: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0',
                   }}
                 >
-                  <Faucet />
+                  <Faucet style={{ fill: 'white', marginRight: '5px' }} />
                   FAUCET
                 </Button>
                 <Button
                   variant="contained"
                   onClick={handleGetAllTransactions}
-                  style={{ backgroundColor: '#6F4CFF', color: 'white' }}
+                  style={{
+                    width: '147px',
+                    height: '32px',
+                    position: 'absolute',
+                    top: '205px',
+                    left: '472px',
+                    borderRadius: '10px',
+                    font: 'Roboto',
+                    fontSize: '12px',
+                    fontWeight: '400',
+                    lineHeight: '18px',
+                    letterSpacing: '0em',
+                    textAlign: 'left',
+                    background: '#2F81FC',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0',
+                  }}
                 >
-                  Transaction History
+                  {' '}
+                  <ReceiptIcon style={{ marginRight: '5px' }} />
+                  Transactions
                 </Button>
-                <Dialog open={open} onClose={handleClose} maxWidth='md'>
-                  <DialogContent >
-                  {txnHistory.length > 0 && (
-                    <TableContainer component={Paper}>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Version</TableCell>
-                            <TableCell>Hash</TableCell>
-                            <TableCell>Value</TableCell>
-                            <TableCell>Timestamp</TableCell>
-                            <TableCell>View on Aptos Explorer</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {txnHistory.map((txn, i) => (
+                <Dialog open={open} onClose={handleClose} maxWidth="md">
+                  <DialogContent>
+                    {txnHistory.length > 0 && (
+                      <TableContainer component={Paper}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Version</TableCell>
+                              <TableCell>Hash</TableCell>
+                              <TableCell>Value</TableCell>
+                              <TableCell>Timestamp</TableCell>
+                              <TableCell>View on Aptos Explorer</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {txnHistory.map((txn, i) => (
                               <TableRow key={i}>
                                 <TableCell>{txn.version}</TableCell>
                                 <TableCell>{txn.hash}</TableCell>
-                                <TableCell>{txn.events[0].data.amount}</TableCell>
-                                <TableCell>{milliToDate(txn.timestamp)}</TableCell>
                                 <TableCell>
-                                  <a href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`} target='_blank'>
-                                    <SnapLogo color='black' size={36} />
+                                  {txn.events[0].data.amount}
+                                </TableCell>
+                                <TableCell>
+                                  {milliToDate(txn.timestamp)}
+                                </TableCell>
+                                <TableCell>
+                                  <a
+                                    href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`}
+                                    target="_blank"
+                                  >
+                                    <SnapLogo color="black" size={36} />
                                   </a>
                                 </TableCell>
                               </TableRow>
                             ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                   )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    )}
                   </DialogContent>
                 </Dialog>
               </div>
             </HorizontalButtonContainer>
-
             <Dialog
               open={isConfirmDialogOpen}
               onClose={closeConfirmDialog}
@@ -648,7 +898,6 @@ const Index = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-
             {isActivityListOpen && (
               <StyledListContainer>
                 <List
