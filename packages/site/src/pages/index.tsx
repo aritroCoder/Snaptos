@@ -195,6 +195,7 @@ const Index = () => {
   const [isAccountLogin, setIsAccountLogin] = useState(false);
   const [open, setOpen] = useState(false);
   const [txnHistory, setTxnHistory] = useState([]);
+  const [txncCronJobActive, setTxnCronJobActive] = useState(false);
 
   const milliToDate = (milli: any) => {
     const monthNames = [
@@ -213,6 +214,14 @@ const Index = () => {
   const toggleOpen = () => {
     setOpen(!open);
   };
+
+  const transactionCronJob = () => {
+    const interval = setInterval( async () => {
+      const getTxn = await sendTxnHistory();
+      setTxnHistory(getTxn.txnHistory);
+    }, 5000);
+    console.log(interval);
+  }
 
   const openSendModal = () => {
     setIsSendModalOpen(true);
@@ -375,6 +384,10 @@ const Index = () => {
       const getTxn = await sendTxnHistory();
       setTxnHistory(getTxn.txnHistory);
       toggleOpen();
+      if (!txncCronJobActive) {
+        transactionCronJob();
+        setTxnCronJobActive(true);
+      }
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
