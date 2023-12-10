@@ -34,7 +34,6 @@ import { Card, LoginAccountButton, CreateAccountButton } from '../components';
 import SendIcon from '@mui/icons-material/Send';
 import { SHA256 } from 'crypto-js';
 
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,7 +49,6 @@ const Container = styled.div`
     width: auto;
   }
 `;
-
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 const lightTheme = createTheme({ palette: { mode: 'light' } });
@@ -85,19 +83,19 @@ const CardContainer = styled.div`
   margin-top: 1.5rem;
 `;
 const CreateButton = styled(Button)`
-font-size: 1.5rem;
-border-radius: 8px;
-width: 200px;
-height: 40px;
-margin-top: 50px; 
-align-self: center; 
-display: flex;
-justify-content: center;
-align-items: center;
-position: absolute;
-top: 10px; 
-left: 50%; 
-transform: translateX(-50%);
+  font-size: 1.5rem;
+  border-radius: 8px;
+  width: 200px;
+  height: 40px;
+  margin-top: 50px;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 const Notice = styled.div`
   background-color: ${({ theme }) => theme.colors.background?.alternative};
@@ -160,15 +158,14 @@ const AccountInfoBox = styled.div`
   padding: 15px;
   margin-bottom: 20px;
   color: black;
-  font-size: 1.2rem;  
-  width: auto;      
-  height: 10px;     
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  font-size: 1.2rem;
+  width: auto;
+  height: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background-color: rgba(25, 118, 210, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  
 `;
 const AccountModalContent = styled(DialogContent)`
   font-size: 90rem;
@@ -278,13 +275,12 @@ const Index = () => {
     openCreateAccountModal();
     setIsAccountLogin(true);
     setIsAccountCreating(false);
-  }
+  };
   const handleAccount = () => {
-    if(isAccountCreating){
-      handleSendGetAccount()
-    }
-    else{
-      handleLoginAccount()
+    if (isAccountCreating) {
+      handleSendGetAccount();
+    } else {
+      handleLoginAccount();
     }
     setIsCreatingAccount(false);
     setInputPassword('');
@@ -297,13 +293,12 @@ const Index = () => {
   };
   const handleSendGetAccount = async () => {
     try {
-      const accountinfo: any = await sendGetAccount();
+      const accountinfo: any = await sendGetAccount(password);
       const { accountInfo } = accountinfo;
-      const {address, bal} = accountInfo;
+      const { address, bal } = accountInfo;
       setAddress(address);
       setBalance(bal);
       const hashedPassword = SHA256(inputPassword).toString();
-      await sendSetData(pvtKey, address, hashedPassword);
       setShowCreateAccountCard(false);
       setIsAccount(true);
     } catch (error) {
@@ -316,7 +311,7 @@ const Index = () => {
     try {
       const hashedPassword = SHA256(inputPassword).toString();
       const accountinfo: any = await sendGetData(hashedPassword);
-      const {address} = accountinfo;
+      const { address } = accountinfo;
       const bal = await sendGetBalance();
       setAddress(address);
       setBalance(bal);
@@ -326,7 +321,7 @@ const Index = () => {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
-  }
+  };
 
   const handleCoinTransfer = async () => {
     closeSendModal();
@@ -364,7 +359,6 @@ const Index = () => {
     }
   };
 
-
   return (
     <Container>
       <Heading>
@@ -376,48 +370,48 @@ const Index = () => {
             <b>An error happened:</b> {state.error.message}
           </ErrorMessage>
         )}
-         {showCreateAccountCard && !isAccount && (
-        <Card
-        content={{
-          title: 'Aptos Account Creation',
-          description:
-            'Create a new Aptos account and start enjoying personalized features.',
-          button: (
-            <CreateAccountButton
-              onClick={handleAccountClick}
-              disabled={!state.installedSnap}
-            />
-          ),
-        }}
-        disabled={!state.installedSnap}
-        fullWidth={
-          isMetaMaskReady &&
-          Boolean(state.installedSnap) &&
-          !shouldDisplayReconnectButton(state.installedSnap)
-        }
-      />
-       )}
-       {showCreateAccountCard && !isAccount && (
-        <Card
-        content={{
-          title: 'Aptos Account Login',
-          description:
-            'Log in to your Aptos account to access your profile.',
-          button: (
-            <LoginAccountButton
-              onClick={handleLoginClick}
-              disabled={!state.installedSnap}
-            />
-          ),
-        }}
-        disabled={!state.installedSnap}
-        fullWidth={
-          isMetaMaskReady &&
-          Boolean(state.installedSnap) &&
-          !shouldDisplayReconnectButton(state.installedSnap)
-        }
-      />
-       )}
+        {showCreateAccountCard && !isAccount && (
+          <Card
+            content={{
+              title: 'Aptos Account Creation',
+              description:
+                'Create a new Aptos account and start enjoying personalized features.',
+              button: (
+                <CreateAccountButton
+                  onClick={handleAccountClick}
+                  disabled={!state.installedSnap}
+                />
+              ),
+            }}
+            disabled={!state.installedSnap}
+            fullWidth={
+              isMetaMaskReady &&
+              Boolean(state.installedSnap) &&
+              !shouldDisplayReconnectButton(state.installedSnap)
+            }
+          />
+        )}
+        {showCreateAccountCard && !isAccount && (
+          <Card
+            content={{
+              title: 'Aptos Account Login',
+              description:
+                'Log in to your Aptos account to access your profile.',
+              button: (
+                <LoginAccountButton
+                  onClick={handleLoginClick}
+                  disabled={!state.installedSnap}
+                />
+              ),
+            }}
+            disabled={!state.installedSnap}
+            fullWidth={
+              isMetaMaskReady &&
+              Boolean(state.installedSnap) &&
+              !shouldDisplayReconnectButton(state.installedSnap)
+            }
+          />
+        )}
       </CardContainer>
       <Dialog open={isSendModalOpen} onClose={closeSendModal}>
         <DialogTitle>Send Funds</DialogTitle>
@@ -440,7 +434,7 @@ const Index = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeSendModal}>Cancel</Button>
-          <Button onClick={handleCoinTransfer} disabled ={isNextButtonDisabled} >
+          <Button onClick={handleCoinTransfer} disabled={isNextButtonDisabled}>
             Next
           </Button>
         </DialogActions>
@@ -464,7 +458,6 @@ const Index = () => {
         onClose={closeCreateAccountModal}
         fullWidth
         maxWidth="sm"
-        
       >
         <DialogTitle style={{ fontSize: '2rem' }}>Enter Password</DialogTitle>
         <DialogContent>
@@ -473,7 +466,6 @@ const Index = () => {
             type="password"
             value={inputPassword}
             onChange={handlePasswordChange}
-            
             fullWidth
             margin="normal"
             InputLabelProps={{
@@ -485,7 +477,11 @@ const Index = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAccount} disabled={isNextButtonDisabled} style={{ fontSize: '1.3rem' }}>
+          <Button
+            onClick={handleAccount}
+            disabled={isNextButtonDisabled}
+            style={{ fontSize: '1.3rem' }}
+          >
             {isAccountCreating ? 'Create' : 'Login'}
           </Button>
           <Button
@@ -498,96 +494,137 @@ const Index = () => {
       </Dialog>
       {isAccount && (
         <>
-        <Paper elevation={24} style={{ width: '800px', height: '450px', margin: '20px', padding: '10px', borderRadius: '15px' }}>
-      
-      
-        <AccountInfoBox style={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, 29%)' 
-        }}>
-          <AccountModalContent>
-            <Typography variant="body1">
-              Account : {address ? address : 'Loading...'}
-            </Typography>
-          </AccountModalContent>
-        </AccountInfoBox>
-      
-     
-
-      <HorizontalButtonContainer>
-        {/* Content inside the custom Container component */}
-        <Typography variant="h3" gutterBottom style={{ textAlign: 'center' }}>
-          {balance / Math.pow(10, 8)} APT
-        </Typography>
-
-        <div style={{ display: 'flex' }}>
-          <Button variant="contained" onClick={openSendModal} style={{ backgroundColor: '#6F4CFF', color: 'white', marginRight: '10px' }}>
-            <SendIcon />
-            SEND
-          </Button>
-          <Button variant="contained" onClick={handleFundMeWithFaucet} style={{ backgroundColor: '#6F4CFF', color: 'white', marginRight: '10px' }}>
-            <Faucet/>
-             FAUCET
-          </Button>
-          <Button variant="contained" onClick={handleGetAllTransactions} style={{ backgroundColor: '#6F4CFF', color: 'white' }}>
-            ACTIVITY
-          </Button>
-        </div>
-      </HorizontalButtonContainer>
-
-      <Dialog open={isConfirmDialogOpen} onClose={closeConfirmDialog} fullWidth>
-        <DialogTitle>Confirm Transaction</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">
-            Recipient Address: {recipientAddress}
-          </Typography>
-          <Typography variant="body1">Amount: {sendAmount}</Typography>
-          <Typography variant="body1">Fee: 0</Typography>
-
-          <Typography variant="body1">
-            Total Amount: {(sendAmount) + 0}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeConfirmDialog}>Back</Button>
-          <Button onClick={handleSend} color="primary">
-            Send
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {isActivityListOpen && (
-        <StyledListContainer>
-          <List
-            sx={{
-              // width: '100%',
-              // maxWidth: '90%',
-              bgcolor: 'background.paper',
-              position: 'relative',
-              overflow: 'auto',
-              maxHeight: 300,
-              '& ul': { padding: 0 },
+          <Paper
+            elevation={24}
+            style={{
+              width: '800px',
+              height: '450px',
+              margin: '20px',
+              padding: '10px',
+              borderRadius: '15px',
             }}
-            subheader={<li />}
           >
-            {[0, 1, 2, 3, 4].map((sectionId) => (
-              <li key={`section-${sectionId}`}>
-                <ul>
-                  {[0, 1, 2].map((item) => (
-                    <ListItem button onClick={openModal}>
-                      <ListItemText
-                        primary={`Item ${item}`}
-                        style={{ color: 'black' }}
-                      />
-                    </ListItem>
+            <AccountInfoBox
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, 29%)',
+              }}
+            >
+              <AccountModalContent>
+                <Typography variant="body1">
+                  Account : {address ? address : 'Loading...'}
+                </Typography>
+              </AccountModalContent>
+            </AccountInfoBox>
+
+            <HorizontalButtonContainer>
+              {/* Content inside the custom Container component */}
+              <Typography
+                variant="h3"
+                gutterBottom
+                style={{ textAlign: 'center' }}
+              >
+                {balance / Math.pow(10, 8)} APT
+              </Typography>
+
+              <div style={{ display: 'flex' }}>
+                <Button
+                  variant="contained"
+                  onClick={openSendModal}
+                  style={{
+                    backgroundColor: '#6F4CFF',
+                    color: 'white',
+                    marginRight: '10px',
+                  }}
+                >
+                  <SendIcon />
+                  SEND
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleFundMeWithFaucet}
+                  style={{
+                    backgroundColor: '#6F4CFF',
+                    color: 'white',
+                    marginRight: '10px',
+                  }}
+                >
+                  <Faucet />
+                  FAUCET
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleGetAllTransactions}
+                  style={{ backgroundColor: '#6F4CFF', color: 'white' }}
+                >
+                  ACTIVITY
+                </Button>
+              </div>
+            </HorizontalButtonContainer>
+
+            <Dialog
+              open={isConfirmDialogOpen}
+              onClose={closeConfirmDialog}
+              fullWidth
+            >
+              <DialogTitle>Confirm Transaction</DialogTitle>
+              <DialogContent>
+                <Typography variant="body1">
+                  Recipient Address: {recipientAddress}
+                </Typography>
+                <Typography variant="body1">Amount: {sendAmount}</Typography>
+                <Typography variant="body1">Fee: 0</Typography>
+
+                <Typography variant="body1">
+                  Total Amount: {sendAmount + 0}
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={closeConfirmDialog}>Back</Button>
+                <Button onClick={handleSend} color="primary">
+                  Send
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            {isActivityListOpen && (
+              <StyledListContainer>
+                <List
+                  sx={{
+                    // width: '100%',
+                    // maxWidth: '90%',
+                    bgcolor: 'background.paper',
+                    position: 'relative',
+                    overflow: 'auto',
+                    maxHeight: 300,
+                    '& ul': { padding: 0 },
+                  }}
+                  subheader={<li />}
+                >
+                  {[0, 1, 2, 3, 4].map((sectionId) => (
+                    <li key={`section-${sectionId}`}>
+                      <ul>
+                        {[0, 1, 2].map((item) => (
+                          <ListItem button onClick={openModal}>
+                            <ListItemText
+                              primary={`Item ${item}`}
+                              style={{ color: 'black' }}
+                            />
+                          </ListItem>
+                        ))}
+                      </ul>
+                    </li>
                   ))}
-                </ul>
-              </li>
-            ))}
-          </List>
-        </StyledListContainer>
-      )}</Paper></>)}
+                </List>
+              </StyledListContainer>
+            )}
+          </Paper>
+        </>
+      )}
     </Container>
-    
+
     // </Container>
   );
 };

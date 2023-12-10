@@ -66,14 +66,17 @@ export const sendHello = async () => {
 
 /**
  * Invoke the "getAccount" method from the example snap.
+ * @param password - The password to use to decrypt the account.
+ * @returns The account data returned by the snap.
  */
-export const sendGetAccount = async () => {
-  const accountData  = await window.ethereum.request({
+export const sendGetAccount = async (password: string) => {
+  const accountData = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
         method: 'getAccount',
+        params: { password },
       },
     },
   });
@@ -105,7 +108,7 @@ export const sendFundMe = async () => {
       },
     },
   });
-}
+};
 
 export const sendTxnHistory = async () => {
   const txnHistory = await window.ethereum.request({
@@ -119,10 +122,10 @@ export const sendTxnHistory = async () => {
   });
   console.log('this is txnHistory', txnHistory);
   return txnHistory;
-}
+};
 
 export const sendGetBalance = async () => {
-  const balance : any = await window.ethereum.request({
+  const balance: any = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -133,9 +136,13 @@ export const sendGetBalance = async () => {
   });
   console.log('this is balance', balance);
   return balance;
-}
+};
 
-export const sendSetData = async (pvtKey: string, address: string, password: string) => {
+export const sendSetData = async (
+  pvtKey: string,
+  address: string,
+  password: string,
+) => {
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
@@ -146,7 +153,7 @@ export const sendSetData = async (pvtKey: string, address: string, password: str
       },
     },
   });
-}
+};
 
 export const sendGetData = async (password: string) => {
   const data = await window.ethereum.request({
@@ -161,7 +168,6 @@ export const sendGetData = async (password: string) => {
   });
   console.log('this is data', data);
   return data;
-}
-
+};
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
