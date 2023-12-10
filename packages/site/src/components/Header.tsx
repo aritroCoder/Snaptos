@@ -64,7 +64,7 @@ export const Header = ({
     <HeaderWrapper>
       <LogoWrapper>
         <SnapLogo color={theme.colors.icon?.default} size={36} />
-        <Title>Aptos-snap</Title>
+        <Title>SNAPTOS</Title>
       </LogoWrapper>
       <RightContainer>
         <Toggle
