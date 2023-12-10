@@ -10,6 +10,7 @@ import { genTxn } from './src/GenTxn';
 import { fundMe } from './src/Faucet';
 import { getTransByHash } from './src/GetTransByHash';
 import { getGasPriceEstimation } from './src/gasPrice';
+import { convertAptToUsd } from './src/aptToUsd';
 
 import { AptosConfig, Network} from '@aptos-labs/ts-sdk';
 
@@ -65,6 +66,10 @@ app.get('/gasPriceEstimate', async (req: Request, res: Response) => {
 
 app.post('/getTransByHash', async (req: Request, res: Response) => {
   res.json(await getTransByHash(req.body));
+});
+
+app.get('/aptToUsd', async (req:Request,res: Response) => {
+  res.json({APT : await convertAptToUsd()});
 });
 
 app.listen(PORT, () => {
