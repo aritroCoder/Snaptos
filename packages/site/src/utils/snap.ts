@@ -120,7 +120,7 @@ export const sendTxnHistory = async () => {
       },
     },
   });
-  console.log('this is txnHistory', txnHistory);
+  console.log('this is txnHistory', txnHistory.txnHistory);
   return txnHistory;
 };
 

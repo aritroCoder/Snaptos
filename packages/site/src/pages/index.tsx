@@ -1,10 +1,10 @@
+/* eslint-disable */
 import React from 'react';
 import { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Modal, Typography, List } from '@mui/material';
+import { Button, TextField, Modal, Typography, List, Dialog, TableBody, TableCell, TableHead, TableRow, TableContainer, Table } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -193,6 +193,24 @@ const Index = () => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [isAccountCreating, setIsAccountCreating] = useState(false);
   const [isAccountLogin, setIsAccountLogin] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [txnHistory, setTxnHistory] = useState([]);
+
+  const milliToDate = (milli) => {
+    let numberString = milli.toString();
+    let result = numberString.slice(0, -3);
+    let resultNumber = parseFloat(result);
+    const date = new Date(resultNumber);
+    return date.toString()
+  }
+  
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const openSendModal = () => {
     setIsSendModalOpen(true);
@@ -352,7 +370,9 @@ const Index = () => {
 
   const handleGetAllTransactions = async () => {
     try {
-      await sendTxnHistory();
+      const getTxn = await sendTxnHistory();
+      setTxnHistory(getTxn.txnHistory);
+      handleOpen();
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -561,6 +581,37 @@ const Index = () => {
                 >
                   ACTIVITY
                 </Button>
+                <Dialog open={open} onClose={handleClose} maxWidth='md'>
+                  <DialogContent >
+                  {txnHistory.length > 0 && (
+                    <TableContainer component={Paper}>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Version</TableCell>
+                            <TableCell>Sender</TableCell>
+                            <TableCell>Value</TableCell>
+                            <TableCell>Timestamp</TableCell>
+                            {/* Add more table headers if needed */}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {/* Add your table rows here */}
+                          {txnHistory.map((txn, i) => (
+                              <TableRow key={i}>
+                                <TableCell>{txn.version}</TableCell>
+                                <TableCell>{txn.sender}</TableCell>
+                                <TableCell>{txn.events[0].data.amount}</TableCell>
+                                <TableCell>{milliToDate(txn.timestamp)}</TableCell>
+                                {/* Add more table cells with data */}
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                   )}
+                  </DialogContent>
+                </Dialog>
               </div>
             </HorizontalButtonContainer>
 
