@@ -197,11 +197,17 @@ const Index = () => {
   const [txnHistory, setTxnHistory] = useState([]);
 
   const milliToDate = (milli) => {
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
     let numberString = milli.toString();
     let result = numberString.slice(0, -3);
     let resultNumber = parseFloat(result);
     const date = new Date(resultNumber);
-    return date.toString()
+    const time = date.getDate() + " " + monthNames[date.getMonth()] + " " +  date.getFullYear();
+    return time;
   }
   
   const handleOpen = () => {
@@ -579,7 +585,7 @@ const Index = () => {
                   onClick={handleGetAllTransactions}
                   style={{ backgroundColor: '#6F4CFF', color: 'white' }}
                 >
-                  ACTIVITY
+                  Transaction History
                 </Button>
                 <Dialog open={open} onClose={handleClose} maxWidth='md'>
                   <DialogContent >
@@ -589,7 +595,7 @@ const Index = () => {
                         <TableHead>
                           <TableRow>
                             <TableCell>Version</TableCell>
-                            <TableCell>Sender</TableCell>
+                            <TableCell>Hash</TableCell>
                             <TableCell>Value</TableCell>
                             <TableCell>Timestamp</TableCell>
                             {/* Add more table headers if needed */}
@@ -600,7 +606,7 @@ const Index = () => {
                           {txnHistory.map((txn, i) => (
                               <TableRow key={i}>
                                 <TableCell>{txn.version}</TableCell>
-                                <TableCell>{txn.sender}</TableCell>
+                                <TableCell>{txn.hash}</TableCell>
                                 <TableCell>{txn.events[0].data.amount}</TableCell>
                                 <TableCell>{milliToDate(txn.timestamp)}</TableCell>
                                 {/* Add more table cells with data */}
