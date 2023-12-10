@@ -2,7 +2,7 @@
 import React from 'react';
 import { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Modal, Typography, List, Dialog, TableBody, TableCell, TableHead, TableRow, TableContainer, Table } from '@mui/material';
+import { Button, TextField, Typography, List, Dialog, TableBody, TableCell, TableHead, TableRow, TableContainer, Table } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -196,7 +196,7 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [txnHistory, setTxnHistory] = useState([]);
 
-  const milliToDate = (milli) => {
+  const milliToDate = (milli: any) => {
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
@@ -210,12 +210,8 @@ const Index = () => {
     return time;
   }
   
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  
-  const handleClose = () => {
-    setOpen(false);
+  const toggleOpen = () => {
+    setOpen(!open);
   };
 
   const openSendModal = () => {
@@ -378,7 +374,7 @@ const Index = () => {
     try {
       const getTxn = await sendTxnHistory();
       setTxnHistory(getTxn.txnHistory);
-      handleOpen();
+      toggleOpen();
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -523,8 +519,8 @@ const Index = () => {
           <Paper
             elevation={24}
             style={{
-              width: '800px',
-              height: '450px',
+              width: '1000px',
+              height: '720px',
               margin: '20px',
               padding: '10px',
               borderRadius: '15px',
@@ -555,7 +551,7 @@ const Index = () => {
                 {balance / Math.pow(10, 8)} APT
               </Typography>
 
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', paddingBottom: '50px' }}>
                 <Button
                   variant="contained"
                   onClick={openSendModal}
@@ -587,41 +583,41 @@ const Index = () => {
                 >
                   Transaction History
                 </Button>
-                <Dialog open={open} onClose={handleClose} maxWidth='md'>
-                  <DialogContent >
-                  {txnHistory.length > 0 && (
+              </div>
+              {!open && <p>Click on transaction history to view all transactions.</p>}
+                {open && txnHistory.length > 0 && (
+                  <div style={{ overflowX: 'auto', overflowY: 'scroll', maxHeight: '480px' }}>
                     <TableContainer component={Paper}>
-                      <Table>
+                      <Table style={{fontSize: '30px'}}>
                         <TableHead>
                           <TableRow>
-                            <TableCell>Version</TableCell>
-                            <TableCell>Hash</TableCell>
-                            <TableCell>Value</TableCell>
-                            <TableCell>Timestamp</TableCell>
-                            <TableCell>View on Aptos Explorer</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Version</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Hash</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Value</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Timestamp</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>View on Explorer</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {txnHistory.map((txn, i) => (
-                              <TableRow key={i}>
-                                <TableCell>{txn.version}</TableCell>
-                                <TableCell>{txn.hash}</TableCell>
-                                <TableCell>{txn.events[0].data.amount}</TableCell>
-                                <TableCell>{milliToDate(txn.timestamp)}</TableCell>
-                                <TableCell>
-                                  <a href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`} target='_blank'>
-                                    <SnapLogo color='black' size={36} />
-                                  </a>
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                            <TableRow key={i}>
+                              <TableCell style={{ fontSize: '14px' }}>{txn.version}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>{txn.hash}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>{txn.events[0].data.amount}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>{milliToDate(txn.timestamp)}</TableCell>
+                              <TableCell>
+                                <a href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`} target='_blank'>
+                                  <SnapLogo color='black' size={36} />
+                                </a>
+                              </TableCell>
+                            </TableRow>
+                          ))}
                         </TableBody>
                       </Table>
                     </TableContainer>
-                   )}
-                  </DialogContent>
-                </Dialog>
-              </div>
+                  </div>
+                )}
+                {open && txnHistory.length === 0 && <p>No transactions to display.</p>}
             </HorizontalButtonContainer>
 
             <Dialog
