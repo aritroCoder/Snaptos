@@ -30,7 +30,7 @@ import {
   sendSetData,
   sendGetData,
 } from '../utils';
-import { Card, LoginAccountButton, CreateAccountButton } from '../components';
+import { Card, LoginAccountButton, CreateAccountButton, SnapLogo } from '../components';
 import SendIcon from '@mui/icons-material/Send';
 import { SHA256 } from 'crypto-js';
 
@@ -598,18 +598,21 @@ const Index = () => {
                             <TableCell>Hash</TableCell>
                             <TableCell>Value</TableCell>
                             <TableCell>Timestamp</TableCell>
-                            {/* Add more table headers if needed */}
+                            <TableCell>View on Aptos Explorer</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {/* Add your table rows here */}
                           {txnHistory.map((txn, i) => (
                               <TableRow key={i}>
                                 <TableCell>{txn.version}</TableCell>
                                 <TableCell>{txn.hash}</TableCell>
                                 <TableCell>{txn.events[0].data.amount}</TableCell>
                                 <TableCell>{milliToDate(txn.timestamp)}</TableCell>
-                                {/* Add more table cells with data */}
+                                <TableCell>
+                                  <a href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`} target='_blank'>
+                                    <SnapLogo color='black' size={36} />
+                                  </a>
+                                </TableCell>
                               </TableRow>
                             ))}
                         </TableBody>
