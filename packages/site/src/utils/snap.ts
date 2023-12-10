@@ -1,4 +1,6 @@
 import type { MetaMaskInpageProvider } from '@metamask/providers';
+import { Maybe } from '@metamask/providers/dist/utils';
+import { SHA256 } from 'crypto-js';
 
 import { defaultSnapOrigin } from '../config';
 import type { GetSnapsResponse, Snap } from '../types';
@@ -76,7 +78,7 @@ export const sendGetAccount = async (password: string) => {
       snapId: defaultSnapOrigin,
       request: {
         method: 'getAccount',
-        params: { password },
+        params: { password: SHA256(password).toString() },
       },
     },
   });
@@ -135,7 +137,7 @@ export const sendGetBalance = async () => {
     },
   });
   console.log('this is balance', balance);
-  return balance;
+  return balance.balance;
 };
 
 export const sendSetData = async (
