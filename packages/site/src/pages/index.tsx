@@ -2,20 +2,6 @@
 import React from 'react';
 import { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  TextField,
-  Modal,
-  Typography,
-  List,
-  Dialog,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableContainer,
-  Table,
-} from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -492,7 +478,7 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>SnapTos</Span>
+        Welcome to <Span>SNAPTOS</Span>
       </Heading>
       <Typography variant="h5" gutterBottom style={{font:'Roboto',fontSize:'18px'}}>
         Integrate Aptos Blockchain with metamask
