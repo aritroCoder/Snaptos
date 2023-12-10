@@ -475,7 +475,7 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>SnapTos</Span>
+        Welcome to <Span>SNAPTOS</Span>
       </Heading>
       <Typography
         variant="h5"
