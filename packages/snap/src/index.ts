@@ -1,5 +1,5 @@
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { heading, panel, text } from '@metamask/snaps-ui';
+import { copyable, heading, panel, text } from '@metamask/snaps-ui';
 
 import createAccount from './utils/aptos/CreateAccount';
 import transferCoin from './utils/aptos/TransferCoin';
@@ -101,7 +101,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           type: 'confirmation',
           content: panel([
             heading('Transfer Coin'),
-            text(`To: **${to}**`),
+            text(`To:`),
+            copyable(`${to}`),
             text(`Amount: **${amount}**`),
             panel([
               heading('Gas fee insights'),
@@ -126,9 +127,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           type: 'alert',
           content: panel([
             heading('Amount transferred successfully.'),
-            text(`To: **${to}**`),
+            text(`To:`),
+            copyable(`${to}`),
             text(`Amount: **${amount}**`),
-            text(`Transaction Hash: **${txHash.hash}**`),
+            text(`Transaction Hash:`),
+            copyable(`${txHash.hash}`),
           ]),
         },
       });
@@ -144,7 +147,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           type: 'alert',
           content: panel([
             heading('Funded 1 APT successfully.'),
-            text(`Transaction Hash: **${txHash}**`),
+            text(`Transaction Hash:`),
+            copyable(`${txHash}`),
           ]),
         },
       });
