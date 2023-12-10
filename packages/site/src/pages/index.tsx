@@ -23,6 +23,7 @@ import ArrowDropDownCircleOutlinedIcon from '@mui/icons-material/ArrowDropDownCi
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import IconButton from '@mui/material/IconButton';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Button, TextField, Typography, List, Dialog, TableBody, TableCell, TableHead, TableRow, TableContainer, Table } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -240,8 +241,9 @@ const Index = () => {
   const [isAccountLogin, setIsAccountLogin] = useState(false);
   const [open, setOpen] = useState(false);
   const [txnHistory, setTxnHistory] = useState([]);
+  const [txncCronJobActive, setTxnCronJobActive] = useState(false);
 
-  const milliToDate = (milli) => {
+  const milliToDate = (milli: any) => {
     const monthNames = [
       'January',
       'February',
@@ -276,7 +278,27 @@ const Index = () => {
 
   const handleClose = () => {
     setOpen(false);
+  }
+  const powerToInteger = (number: any) => {
+    let formattedAmount = number.toFixed(8); 
+    let [integerPart, fractionalPart] = formattedAmount.split('.');
+    fractionalPart = fractionalPart.padStart(2, '0');
+    let result = `${integerPart}.${fractionalPart}`;
+    console.log(result);
+    return result;
+  }
+  
+  const toggleOpen = () => {
+    setOpen(!open);
   };
+
+  const transactionCronJob = () => {
+    const interval = setInterval( async () => {
+      const getTxn = await sendTxnHistory();
+      setTxnHistory(getTxn.txnHistory);
+    }, 5000);
+    console.log(interval);
+  }
 
   const openSendModal = () => {
     setIsSendModalOpen(true);
@@ -438,7 +460,11 @@ const Index = () => {
     try {
       const getTxn = await sendTxnHistory();
       setTxnHistory(getTxn.txnHistory);
-      handleOpen();
+      toggleOpen();
+      if (!txncCronJobActive) {
+        transactionCronJob();
+        setTxnCronJobActive(true);
+      }
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -604,8 +630,8 @@ const Index = () => {
           <Paper
             elevation={8}
             style={{
-              width: '800px',
-              height: '450px',
+              width: '1000px',
+              height: '720px',
               margin: '20px',
               padding: '20px',
               borderRadius: '15px',
@@ -752,7 +778,7 @@ const Index = () => {
                 {balance / Math.pow(10, 8)} APT
               </Typography>
 
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', paddingBottom: '50px' }}>
                 <Button
                   variant="contained"
                   onClick={openSendModal}
@@ -831,48 +857,42 @@ const Index = () => {
                   <ReceiptIcon style={{ marginRight: '5px' }} />
                   Transactions
                 </Button>
-                <Dialog open={open} onClose={handleClose} maxWidth="md">
-                  <DialogContent>
-                    {txnHistory.length > 0 && (
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Version</TableCell>
-                              <TableCell>Hash</TableCell>
-                              <TableCell>Value</TableCell>
-                              <TableCell>Timestamp</TableCell>
-                              <TableCell>View on Aptos Explorer</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {txnHistory.map((txn, i) => (
-                              <TableRow key={i}>
-                                <TableCell>{txn.version}</TableCell>
-                                <TableCell>{txn.hash}</TableCell>
-                                <TableCell>
-                                  {txn.events[0].data.amount}
-                                </TableCell>
-                                <TableCell>
-                                  {milliToDate(txn.timestamp)}
-                                </TableCell>
-                                <TableCell>
-                                  <a
-                                    href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`}
-                                    target="_blank"
-                                  >
-                                    <SnapLogo color="black" size={36} />
-                                  </a>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    )}
-                  </DialogContent>
-                </Dialog>
               </div>
+              {!open && <p>Click on transaction history to view all transactions.</p>}
+                {open && txnHistory.length > 0 && (
+                    
+                  <div style={{ overflowX: 'auto', overflowY: 'scroll', maxHeight: '480px' }}>
+                    <TableContainer component={Paper}>
+                      <Table style={{fontSize: '30px'}}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell style={{ fontSize: '15px' }}>Version</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Hash</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Value (APT)</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Timestamp</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>View on Explorer</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {txnHistory.map((txn, i) => (
+                            <TableRow key={i}>
+                              <TableCell style={{ fontSize: '14px' }}>{txn.version}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>{txn.hash}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>{powerToInteger(txn.events[0].data.amount*Math.pow(10,-8))}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>{milliToDate(txn.timestamp)}</TableCell>
+                              <TableCell>
+                                <a href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`} target='_blank'>
+                                  <SnapLogo color='black' size={36} />
+                                </a>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                )}
+                {open && txnHistory.length === 0 && <p>No transactions to display.</p>}
             </HorizontalButtonContainer>
             <Dialog
               open={isConfirmDialogOpen}
