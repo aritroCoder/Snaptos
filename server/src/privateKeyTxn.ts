@@ -13,6 +13,15 @@ function decryptPhrase(encryptedPhrase: string, key: string): string {
   return originalText;
 }
 
+function padHexString(input: string): string {
+  let hexString = input.startsWith('0x') ? input.slice(2) : input;
+  const length = 64;
+  while (hexString.length < length) {
+    hexString = '0' + hexString;
+  }
+  return '0x' + hexString;
+}
+
 export async function privateKeyTxn(request: Request) {
   const aptos = new Aptos();
 
@@ -28,7 +37,7 @@ export async function privateKeyTxn(request: Request) {
 
   const txn = await aptos.transferCoinTransaction({
     sender: account,
-    recipient,
+    recipient: padHexString(recipient),
     amount,
   });
   const txn1 = await aptos.signAndSubmitTransaction({

@@ -60,6 +60,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
             content: panel([
               heading('Account Details'),
               text(`Address: **${accountDetails.accountAddress}**`),
+              text(
+                'If you have created your account in devnet/testnet, we have already funded some Aptos to your account.',
+              ),
             ]),
           },
         }),
@@ -100,6 +103,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
             heading('Transfer Coin'),
             text(`To: **${to}**`),
             text(`Amount: **${amount}**`),
+            panel([
+              heading('Gas fee insights'),
+              text('Average price per gas unit: **0.000001 APT**'),
+              text('Max price per gas unit: **0.0000015 APT**'),
+              text('Max gas limit: **200**(upto **0.0003 APT**)'),
+            ]),
             text('Are you sure you want to transfer?'),
           ]),
         },
