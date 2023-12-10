@@ -161,16 +161,18 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         pvtKey,
         address,
         password, // tip: use hashed password here
+        network,
       }: {
         pvtKey: string;
         address: string;
         password: string;
+        network: string;
       } = request.params;
       await snap.request({
         method: 'snap_manageState',
         params: {
           operation: 'update',
-          newState: { pvtKey, address, password },
+          newState: { pvtKey, address, password, network },
         },
       });
       break;
@@ -182,6 +184,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         pvtKey: string;
         address: string;
         password: string;
+        network: string;
       } = await snap.request({
         method: 'snap_manageState',
         params: {
