@@ -346,7 +346,7 @@ const Index = () => {
     try {
       await sendCoin(recipientAddress, sendAmount);
       const updatedBalance = await sendGetBalance();
-      setBalance(updatedBalance.balance);
+      setBalance(updatedBalance);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -361,7 +361,7 @@ const Index = () => {
     try {
       await sendFundMe();
       const updatedBalance = await sendGetBalance();
-      setBalance(updatedBalance.balance);
+      setBalance(updatedBalance);
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
