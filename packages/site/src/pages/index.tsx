@@ -210,6 +210,14 @@ const Index = () => {
     const time = date.getDate() + " " + monthNames[date.getMonth()] + " " +  date.getFullYear();
     return time;
   }
+  const powerToInteger = (number: any) => {
+    let formattedAmount = number.toFixed(8); 
+    let [integerPart, fractionalPart] = formattedAmount.split('.');
+    fractionalPart = fractionalPart.padStart(2, '0');
+    let result = `${integerPart}.${fractionalPart}`;
+    console.log(result);
+    return result;
+  }
   
   const toggleOpen = () => {
     setOpen(!open);
@@ -606,7 +614,7 @@ const Index = () => {
                           <TableRow>
                             <TableCell style={{ fontSize: '15px' }}>Version</TableCell>
                             <TableCell style={{ fontSize: '15px' }}>Hash</TableCell>
-                            <TableCell style={{ fontSize: '15px' }}>Value</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>Value (APT)</TableCell>
                             <TableCell style={{ fontSize: '15px' }}>Timestamp</TableCell>
                             <TableCell style={{ fontSize: '15px' }}>View on Explorer</TableCell>
                           </TableRow>
@@ -616,7 +624,7 @@ const Index = () => {
                             <TableRow key={i}>
                               <TableCell style={{ fontSize: '14px' }}>{txn.version}</TableCell>
                               <TableCell style={{ fontSize: '14px' }}>{txn.hash}</TableCell>
-                              <TableCell style={{ fontSize: '14px' }}>{txn.events[0].data.amount}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>{powerToInteger(txn.events[0].data.amount*Math.pow(10,-8))}</TableCell>
                               <TableCell style={{ fontSize: '14px' }}>{milliToDate(txn.timestamp)}</TableCell>
                               <TableCell>
                                 <a href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`} target='_blank'>
