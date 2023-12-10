@@ -2,10 +2,16 @@
 import React from 'react';
 import { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
+import ArrowDropDownCircleOutlinedIcon from '@mui/icons-material/ArrowDropDownCircleOutlined';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import IconButton from '@mui/material/IconButton';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   Button,
   TextField,
-  Modal,
   Typography,
   List,
   Dialog,
@@ -16,14 +22,6 @@ import {
   TableContainer,
   Table,
 } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-
-import ArrowDropDownCircleOutlinedIcon from '@mui/icons-material/ArrowDropDownCircleOutlined';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import IconButton from '@mui/material/IconButton';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Button, TextField, Typography, List, Dialog, TableBody, TableCell, TableHead, TableRow, TableContainer, Table } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -172,13 +170,12 @@ const HorizontalButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 2rem;
   font: Roboto;
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 100;
   line-height: 38px;
   letter-spacing: 0em;
-  text-align: left;
 `;
 const BalanceText = styled.div`
   text-align: center;
@@ -189,29 +186,15 @@ const AccountInfoBox = styled.div`
   border: none;
   border-radius: 20px;
   padding: 10px;
-  margin-bottom: 20px;
-  color: #001A5D;
-  font-size: 1.2rem;
-  width: 405px;
+  color: #001a5d;
+  width: fit-content;
   height: 10px;
-  
-  background-color: #D5E6FF;
+  margin: 2rem auto;
+  background-color: #d5e6ff;
   display: flex;
   align-items: center;
   justify-content: center;
   font: Roboto;
-font-size: 12px;
-font-weight: 300;
-line-height: 14px;
-letter-spacing: 0em;
-text-align: left;
-width: 463px
-height: 35px
-top: 100px
-left: 289px
-border-radius: 15px
-
-
 `;
 const AccountModalContent = styled(DialogContent)`
   font-size: 90rem;
@@ -278,27 +261,27 @@ const Index = () => {
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
   const powerToInteger = (number: any) => {
-    let formattedAmount = number.toFixed(8); 
+    let formattedAmount = number.toFixed(8);
     let [integerPart, fractionalPart] = formattedAmount.split('.');
     fractionalPart = fractionalPart.padStart(2, '0');
     let result = `${integerPart}.${fractionalPart}`;
     console.log(result);
     return result;
-  }
-  
+  };
+
   const toggleOpen = () => {
     setOpen(!open);
   };
 
   const transactionCronJob = () => {
-    const interval = setInterval( async () => {
+    const interval = setInterval(async () => {
       const getTxn = await sendTxnHistory();
       setTxnHistory(getTxn.txnHistory);
     }, 5000);
     console.log(interval);
-  }
+  };
 
   const openSendModal = () => {
     setIsSendModalOpen(true);
@@ -494,7 +477,11 @@ const Index = () => {
       <Heading>
         Welcome to <Span>SnapTos</Span>
       </Heading>
-      <Typography variant="h5" gutterBottom style={{font:'Roboto',fontSize:'18px'}}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        style={{ font: 'Roboto', fontSize: '18px' }}
+      >
         Integrate Aptos Blockchain with metamask
       </Typography>
       <CardContainer>
@@ -630,260 +617,278 @@ const Index = () => {
           <Paper
             elevation={8}
             style={{
-              width: '1000px',
-              height: '720px',
-              margin: '20px',
-              padding: '20px',
+              height: 'auto',
               borderRadius: '15px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
               alignItems: 'center',
               position: 'relative',
+              width:'50%',
             }}
           >
             {' '}
-            
-            <ArrowDropDownCircleOutlinedIcon
-              style={{
-                position: 'absolute',
-                top: '15px',
-                left: '20px',
-                fontSize: 32,
-                color: '#ccc',
-              }}
-              onClick={handleDropdownClick}
-            />
             <div
-              style={{
-                font: 'Roboto',
-                marginLeft: '-650px',
-                fontSize: '14px',
-                border: '1px solid #000',
-                padding: '3px 6px',
-                borderRadius: '15px',
-              }}
-            >
-              {selectedNetwork.toUpperCase()}{' '}
-              {/* Display the selected network in uppercase */}
-            </div>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleDropdownClose}
-            >
-              <MenuItem
-                onClick={() => handleNetworkSelect('mainnet')}
-                sx={{ fontSize: '20px', font: 'Roboto' }}
-              >
-                Mainnet
-              </MenuItem>
-              <MenuItem
-                onClick={() => handleNetworkSelect('testnet')}
-                sx={{ fontSize: '20px', font: 'Roboto' }}
-              >
-                Testnet
-              </MenuItem>
-              <MenuItem
-                onClick={() => handleNetworkSelect('devnet')}
-                sx={{ fontSize: '20px', font: 'Roboto' }}
-              >
-                Devnet
-              </MenuItem>
-            </Menu>
-            <OpenInNewIcon
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '20px',
-                width: '25px',
-                height: '25px',
-                color: '#ccc',
-              }}
-              onClick={() => {
-                window.open(
-                  'https://explorer.aptoslabs.com/account/',
-                  '_blank',
-                );
-              }}
-            />
-            <div
+              className="section1"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                marginBottom: '20px',
-                position: 'relative',
+                justifyContent: 'space-between',
+                padding: '10px 0px',
+                background:'#F2F2F2',
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
+                borderRadius: '15px 15px 0px 0px',
+                width:'100%',
               }}
             >
-              <AccountCircleIcon
-                style={{
-                  width: '25px',
-                  height: '25px',
-                  marginRight: '-33px',
-                  color: '#434343',
-                  marginTop: '-32px',
-                }}
-              />
-
-              <Typography
-                variant="h4"
-                gutterBottom
+              <div
                 style={{
                   font: 'Roboto',
-                  fontSize: '24px',
-                  fontWeight: 530,
-                  marginLeft: '40px',
-                  color: '#000000',
-                  marginTop: '-25px'
+                  fontSize: '14px',
+                  border: '1px solid #000',
+                  padding: '3px 6px',
+                  borderRadius: '15px',
+                  marginLeft: '2rem',
                 }}
               >
-                Aptos Account
-              </Typography>
-            </div>{' '}
-            <hr
-              style={{
-                width: '100% ',
-                margin: '0 auto',
-                borderBottom: '0.2px solid #ccc',
-                boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.2)',
-                marginTop: '-15px',
-              }}
-            />
-            <AccountInfoBox
-              style={{
-                position: 'absolute',
-                top: '15%',
-                left: '50%',
-                transform: 'translate(-50%, 50%)',
-              }}
-            >
-              <AccountModalContent>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography variant="body1">
-                    {address ? address : 'Loading...'}
-                  </Typography>
-                  <ContentCopyIcon
-                    style={{ marginLeft: '8px', cursor: 'pointer' }}
-                    onClick={() => {}}
-                  />
-                </div>
-              </AccountModalContent>
-            </AccountInfoBox>
-            <HorizontalButtonContainer>
-              <Typography
-                variant="h3"
-                gutterBottom
-                style={{ textAlign: 'center' }}
-              >
-                {balance / Math.pow(10, 8)} APT
-              </Typography>
-
-              <div style={{ display: 'flex', paddingBottom: '50px' }}>
-                <Button
-                  variant="contained"
-                  onClick={openSendModal}
+                {selectedNetwork.toUpperCase()}{' '}
+                <ArrowDropDownCircleOutlinedIcon
                   style={{
-                    width: '94px',
-                    height: '32px',
-                    position: 'absolute',
-                    top: '205px',
-                    left: '240px',
-                    borderRadius: '10px',
-                    background: '#2F81FC',
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '0',
-                    fontSize: '12px',
-                    font: 'Roboto',
+                    fontSize: 15,
+                    color: '#434343',
                   }}
-                >
-                  <SendIcon style={{ marginRight: '5px' }} />
-                  SEND
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleFundMeWithFaucet}
-                  style={{
-                    width: '105px',
-                    height: '32px',
-                    position: 'absolute',
-                    top: '205px',
-                    left: '351px',
-                    borderRadius: '10px',
-                    font: 'Roboto',
-                    fontSize: '12px',
-                    fontWeight: '400',
-                    lineHeight: '18px',
-                    letterSpacing: '0em',
-                    textAlign: 'left',
-                    background: '#2F81FC',
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '0',
-                  }}
-                >
-                  <Faucet style={{ fill: 'white', marginRight: '5px' }} />
-                  FAUCET
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleGetAllTransactions}
-                  style={{
-                    width: '147px',
-                    height: '32px',
-                    position: 'absolute',
-                    top: '205px',
-                    left: '472px',
-                    borderRadius: '10px',
-                    font: 'Roboto',
-                    fontSize: '12px',
-                    fontWeight: '400',
-                    lineHeight: '18px',
-                    letterSpacing: '0em',
-                    textAlign: 'left',
-                    background: '#2F81FC',
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '0',
-                  }}
-                >
-                  {' '}
-                  <ReceiptIcon style={{ marginRight: '5px' }} />
-                  Transactions
-                </Button>
+                  onClick={handleDropdownClick}
+                />
               </div>
-              {!open && <p>Click on transaction history to view all transactions.</p>}
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleDropdownClose}
+              >
+                <MenuItem
+                  onClick={() => handleNetworkSelect('mainnet')}
+                  sx={{ fontSize: '15px', font: 'Roboto' }}
+                >
+                  Mainnet
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNetworkSelect('testnet')}
+                  sx={{ fontSize: '15px', font: 'Roboto' }}
+                >
+                  Testnet
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNetworkSelect('devnet')}
+                  sx={{ fontSize: '15px', font: 'Roboto' }}
+                >
+                  Devnet
+                </MenuItem>
+              </Menu>
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  position: 'relative',
+                }}
+              >
+                <AccountCircleIcon
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    color: '#434343',
+                  }}
+                />
+
+                <Typography
+                  variant="h4"
+                  style={{
+                    font: 'Roboto',
+                    fontSize: '20px',
+                    fontWeight: 530,
+                    color: '#000000',
+                    padding: '0px 10px',
+                  }}
+                >
+                  Aptos Account
+                </Typography>
+              </div>
+              <OpenInNewIcon
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  color: '#434343',
+                  marginRight: '2rem',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  window.open(
+                    `https://explorer.aptoslabs.com/account/${address}?network=devnet`,
+                    '_blank',
+                  );
+                }}
+              />
+            </div>
+            <div className="section2">
+              <AccountInfoBox>
+                <AccountModalContent>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body1">
+                      {address ? address : 'Loading...'}
+                    </Typography>
+                    <ContentCopyIcon
+                      style={{ marginLeft: '8px', cursor: 'pointer' }}
+                      onClick={() => {}}
+                    />
+                  </div>
+                </AccountModalContent>
+              </AccountInfoBox>
+              <Typography
+                  variant="h3"
+                  gutterBottom
+                  style={{ textAlign: 'center' }}
+                >
+                  {balance / Math.pow(10, 8)} APT
+                </Typography>
+
+              <HorizontalButtonContainer>
+                <div style={{ display: 'flex', justifyContent:'space-evenly', width:'100%',}}>
+                  <Button
+                    variant="contained"
+                    onClick={openSendModal}
+                    style={{
+                      width: '94px',
+                      height: '32px',
+                      borderRadius: '10px',
+                      background: '#2F81FC',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0',
+                      fontSize: '12px',
+                      font: 'Roboto',
+                    }}
+                  >
+                    <SendIcon style={{ marginRight: '5px' }} />
+                    SEND
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleFundMeWithFaucet}
+                    style={{
+                      width: '105px',
+                      height: '32px',
+                      borderRadius: '10px',
+                      font: 'Roboto',
+                      fontSize: '12px',
+                      fontWeight: '400',
+                      lineHeight: '18px',
+                      letterSpacing: '0em',
+                      textAlign: 'left',
+                      background: '#2F81FC',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0',
+                    }}
+                  >
+                    <Faucet style={{ fill: 'white', marginRight: '5px' }} />
+                    FAUCET
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleGetAllTransactions}
+                    style={{
+                      width: '147px',
+                      height: '32px',
+                      borderRadius: '10px',
+                      font: 'Roboto',
+                      fontSize: '12px',
+                      fontWeight: '400',
+                      lineHeight: '18px',
+                      letterSpacing: '0em',
+                      textAlign: 'left',
+                      background: '#2F81FC',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0',
+                    }}
+                  >
+                    {' '}
+                    <ReceiptIcon style={{ marginRight: '5px' }} />
+                    Transactions
+                  </Button>
+                </div>
+                {!open && (
+                  <p style={{color: '#7F7F7F', fontSize: '1.4rem', fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}>Click on transaction history to view all transactions.</p>
+                )}
                 {open && txnHistory.length > 0 && (
-                    
-                  <div style={{ overflowX: 'auto', overflowY: 'scroll', maxHeight: '480px' }}>
+                  <div
+                    style={{
+                      overflowX: 'auto',
+                      overflowY: 'scroll',
+                      maxHeight: '480px',
+                      width:'100%',
+                    }}
+                  >
                     <TableContainer component={Paper}>
-                      <Table style={{fontSize: '30px'}}>
+                      <Table style={{ fontSize: '30px', width: '100%' }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell style={{ fontSize: '15px' }}>Version</TableCell>
-                            <TableCell style={{ fontSize: '15px' }}>Hash</TableCell>
-                            <TableCell style={{ fontSize: '15px' }}>Value (APT)</TableCell>
-                            <TableCell style={{ fontSize: '15px' }}>Timestamp</TableCell>
-                            <TableCell style={{ fontSize: '15px' }}>View on Explorer</TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>
+                              Version
+                            </TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>
+                              Hash
+                            </TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>
+                              Value (APT)
+                            </TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>
+                              Timestamp
+                            </TableCell>
+                            <TableCell style={{ fontSize: '15px' }}>
+                              View on Explorer
+                            </TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {txnHistory.map((txn, i) => (
                             <TableRow key={i}>
-                              <TableCell style={{ fontSize: '14px' }}>{txn.version}</TableCell>
-                              <TableCell style={{ fontSize: '14px' }}>{txn.hash}</TableCell>
-                              <TableCell style={{ fontSize: '14px' }}>{powerToInteger(txn.events[0].data.amount*Math.pow(10,-8))}</TableCell>
-                              <TableCell style={{ fontSize: '14px' }}>{milliToDate(txn.timestamp)}</TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>
+                                {txn.version}
+                              </TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>
+                                {txn.hash}
+                              </TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>
+                                {powerToInteger(
+                                  txn.events[0].data.amount * Math.pow(10, -8),
+                                )}
+                              </TableCell>
+                              <TableCell style={{ fontSize: '14px' }}>
+                                {milliToDate(txn.timestamp)}
+                              </TableCell>
                               <TableCell>
-                                <a href={`https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`} target='_blank'>
-                                  <SnapLogo color='black' size={36} />
-                                </a>
+                              <OpenInNewIcon
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  color: '#434343',
+                  marginRight: '10px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  window.open(
+                    `https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`,
+                    '_blank',
+                  );
+                }}
+              />
                               </TableCell>
                             </TableRow>
                           ))}
@@ -892,63 +897,66 @@ const Index = () => {
                     </TableContainer>
                   </div>
                 )}
-                {open && txnHistory.length === 0 && <p>No transactions to display.</p>}
-            </HorizontalButtonContainer>
-            <Dialog
-              open={isConfirmDialogOpen}
-              onClose={closeConfirmDialog}
-              fullWidth
-            >
-              <DialogTitle>Confirm Transaction</DialogTitle>
-              <DialogContent>
-                <Typography variant="body1">
-                  Recipient Address: {recipientAddress}
-                </Typography>
-                <Typography variant="body1">Amount: {sendAmount}</Typography>
-                <Typography variant="body1">Fee: 0</Typography>
+                {open && txnHistory.length === 0 && (
+                  <p>No transactions to display.</p>
+                )}
+              </HorizontalButtonContainer>
+              <Dialog
+                open={isConfirmDialogOpen}
+                onClose={closeConfirmDialog}
+                fullWidth
+              >
+                <DialogTitle>Confirm Transaction</DialogTitle>
+                <DialogContent>
+                  <Typography variant="body1">
+                    Recipient Address: {recipientAddress}
+                  </Typography>
+                  <Typography variant="body1">Amount: {sendAmount}</Typography>
+                  <Typography variant="body1">Fee: 0</Typography>
 
-                <Typography variant="body1">
-                  Total Amount: {sendAmount + 0}
-                </Typography>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={closeConfirmDialog}>Back</Button>
-                <Button onClick={handleSend} color="primary">
-                  Send
-                </Button>
-              </DialogActions>
-            </Dialog>
-            {isActivityListOpen && (
-              <StyledListContainer>
-                <List
-                  sx={{
-                    // width: '100%',
-                    // maxWidth: '90%',
-                    bgcolor: 'background.paper',
-                    position: 'relative',
-                    overflow: 'auto',
-                    maxHeight: 300,
-                    '& ul': { padding: 0 },
-                  }}
-                  subheader={<li />}
-                >
-                  {[0, 1, 2, 3, 4].map((sectionId) => (
-                    <li key={`section-${sectionId}`}>
-                      <ul>
-                        {[0, 1, 2].map((item) => (
-                          <ListItem button onClick={openModal}>
-                            <ListItemText
-                              primary={`Item ${item}`}
-                              style={{ color: 'black' }}
-                            />
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </List>
-              </StyledListContainer>
-            )}
+                  <Typography variant="body1">
+                    Total Amount: {sendAmount + 0}
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={closeConfirmDialog}>Back</Button>
+                  <Button onClick={handleSend} color="primary">
+                    Send
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              {isActivityListOpen && (
+                <StyledListContainer>
+                  <List
+                    sx={{
+                      // width: '100%',
+                      // maxWidth: '90%',
+                      bgcolor: 'background.paper',
+                      position: 'relative',
+                      overflow: 'auto',
+                      maxHeight: 300,
+                      '& ul': { padding: 0 },
+                    }}
+                    subheader={<li />}
+                  >
+                    {[0, 1, 2, 3, 4].map((sectionId) => (
+                      <li key={`section-${sectionId}`}>
+                        <ul>
+                          {[0, 1, 2].map((item) => (
+                            <ListItem button onClick={openModal}>
+                              <ListItemText
+                                primary={`Item ${item}`}
+                                style={{ color: 'black' }}
+                              />
+                            </ListItem>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </List>
+                </StyledListContainer>
+              )}
+            </div>
           </Paper>
         </>
       )}
