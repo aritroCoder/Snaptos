@@ -14,13 +14,14 @@ export default async function transferCoin(
   amount: number,
   pk: string,
 ) {
+  const networkType = 'TESTNET';
   const account = await getAccount();
   const txHash = await fetch(`${HOST}/transaction`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ pk, recipient: to, amount }),
+    body: JSON.stringify({ pk, recipient: to, amount, network: networkType }),
   }).then(async (res) => res.json());
   return txHash.tx;
 }

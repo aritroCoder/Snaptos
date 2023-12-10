@@ -1,8 +1,10 @@
-import { AccountAddress, Aptos } from '@aptos-labs/ts-sdk';
+/* eslint-disable */
+import { Aptos, AptosConfig, Network, NetworkToNetworkName } from '@aptos-labs/ts-sdk';
 
 type Request = {
   address: string;
   amt: number;
+  network: string;
 };
 
 /**
@@ -12,10 +14,22 @@ type Request = {
  * @throws {Error} If the account could not be created.
  */
 export async function createAccount(request: Request) {
-  console.log("yes")
-  const aptos = new Aptos();
 
   const requestBody: Request = request;
+  const networkType = requestBody.network;
+
+  let APTOS_NETWORK: Network;
+
+  if (networkType === 'DEVNET') {
+    APTOS_NETWORK = Network.DEVNET;
+  } else if (networkType === 'TESTNET') {
+    APTOS_NETWORK = Network.TESTNET;
+  } else if (networkType === 'MAINNET') {
+    APTOS_NETWORK = Network.MAINNET;
+  }
+
+  const aptosConfig = new AptosConfig({ network: APTOS_NETWORK });
+  const aptos = new Aptos(aptosConfig);
 
   console.log('this is request body', requestBody);
   console.log(typeof requestBody.address);

@@ -1,10 +1,12 @@
-import { Account, Aptos, Ed25519PrivateKey } from '@aptos-labs/ts-sdk';
+/* eslint-disable */
+import { Account, Aptos, AptosConfig, Ed25519PrivateKey, Network } from '@aptos-labs/ts-sdk';
 import CryptoJS from 'crypto-js';
 
 type Request = {
   pk: string;
   recipient: string;
   amount: number;
+  network: string;
 };
 
 function decryptPhrase(encryptedPhrase: string, key: string): string {
@@ -23,9 +25,21 @@ function padHexString(input: string): string {
 }
 
 export async function privateKeyTxn(request: Request) {
-  const aptos = new Aptos();
-
   const requestBody: Request = request;
+  const networkType = requestBody.network;
+
+  let APTOS_NETWORK: Network;
+
+  if (networkType === 'DEVNET') {
+    APTOS_NETWORK = Network.DEVNET;
+  } else if (networkType === 'TESTNET') {
+    APTOS_NETWORK = Network.TESTNET;
+  } else if (networkType === 'MAINNET') {
+    APTOS_NETWORK = Network.MAINNET;
+  }
+  
+  const aptosConfig = new AptosConfig({ network: APTOS_NETWORK });
+  const aptos = new Aptos(aptosConfig);
   const { recipient, pk, amount } = requestBody;
   const key = 'key';
   console.log({ pk, recipient, amount });

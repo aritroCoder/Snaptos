@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Account, AccountAddress, Ed25519PrivateKey } from '@aptos-labs/ts-sdk';
 
 import { getAptosEntropy } from './GenKeyPair';
@@ -16,6 +17,8 @@ export default async function createAccount(): Promise<{
   accountAddress: string;
   privateKey: string;
 }> {
+  const networkType = 'TESTNET';
+
   const keypair = await getAptosEntropy();
   if (!keypair.privateKey) {
     throw new Error('No private key found');
@@ -36,6 +39,7 @@ export default async function createAccount(): Promise<{
     body: JSON.stringify({
       address: account.accountAddress.toString(),
       amt: 20000000,
+      network: networkType,
     }),
   }).then((res) => res.json());
   const balance = await fetch(`${HOST}/getBalance`, {
@@ -43,7 +47,7 @@ export default async function createAccount(): Promise<{
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ address: account.accountAddress.toString() }),
+    body: JSON.stringify({ address: account.accountAddress.toString(), network: networkType }),
   }).then((res) => res.json());
   const bal = balance[0].amount;
   return {
