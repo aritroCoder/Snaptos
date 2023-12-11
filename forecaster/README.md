@@ -7,8 +7,8 @@ cd bin/
 ./deploy.sh up
 ```
 This command might take more than 10 minutes on first run as it will download the docker images and build the containers.
-Server will run on localhost:8000
-View the documentation at localhost:8000/docs
+Server will run on localhost:9000
+View the documentation at localhost:9000/docs
 
 ## Stop the server
 ```bash
