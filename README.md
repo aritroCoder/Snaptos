@@ -85,7 +85,7 @@ Congratulations! You are now ready to experience the power of Snaptos. Access yo
 - Although RNNs and CNNs were meant for time series data, they usually falter at remembering long term dependencies in the data. LSTMs and GRUs were made to overcome this limitation and thus here we have used LSTMs, which are a superior version of RNNs.
 
 ## Authors
-This project has been made for Inter IIT Tech meet 23 by Insitute/Team id 46.
+This project has been made for 12th Inter IIT Tech meet 2023 by Insitute/Team id 46.
 
 ## References
 - Patel, Mohil Maheshkumar, et al. "A deep learning-based cryptocurrency price prediction scheme for financial institutions." Journal of information security and applications 55 (2020): 102583. https://doi.org/10.1002/isaf.1488
