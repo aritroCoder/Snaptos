@@ -300,9 +300,7 @@ if(forecastCronJobActive) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          newJSON
-        }),
+        body: JSON.stringify(newJSON),
       }).then((res) => res.json());
       console.log(fetchPredictedPrice);
       setpredictedPrice(fetchPredictedPrice.price);
