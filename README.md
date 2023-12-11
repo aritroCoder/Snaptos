@@ -1,6 +1,6 @@
 # Aptos Wallet - Metamask Snap
 
-Welcome to Aptos Wallet, a revolutionary Metamask Snap that brings support for the non-EVM blockchain, Aptos. This feature-rich wallet is designed to provide users with a seamless experience for managing Aptos assets, executing transactions, and accessing various advanced functionalities, all within the familiar Metamask environment.
+Welcome to Aptos Wallet, a Metamask Snap that brings support for the non-EVM L1 blockchain, Aptos. This feature-rich wallet is designed to provide users with a seamless experience for managing Aptos assets, executing transactions, and accessing various advanced functionalities, all within the familiar Metamask environment.
 
 ## Features
 
