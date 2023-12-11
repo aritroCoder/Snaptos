@@ -55,6 +55,7 @@ import {
   LoginAccountButton,
   CreateAccountButton,
   SnapLogo,
+  Chart,
   CopyToClipboardButton,
 } from '../components';
 import SendIcon from '@mui/icons-material/Send';
@@ -1055,6 +1056,7 @@ if(forecastCronJobActive) {
           1 APT = {valueInUSD} USD
         </Typography>
       </Notice>
+      <Chart data={trainingJSON}/>
       <Notice>
         <p style={{
                     font: 'Roboto',
