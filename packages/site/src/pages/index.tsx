@@ -629,7 +629,7 @@ const Index = () => {
               justifyContent: 'flex-start',
               alignItems: 'center',
               position: 'relative',
-              width: '50%',
+              width: '70%',
             }}
           >
             {' '}
@@ -759,6 +759,7 @@ const Index = () => {
                     display: 'flex',
                     justifyContent: 'space-evenly',
                     width: '100%',
+                    paddingBottom: '2rem'
                   }}
                 >
                   <Button
