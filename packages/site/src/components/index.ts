@@ -8,3 +8,4 @@ export * from './SnapLogo';
 export * from './Toggle';
 export * from './Network';
 export * from './CopyToClipboardButton';
+export * from './Chart';

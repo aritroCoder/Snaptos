@@ -64,6 +64,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.20",
+    "@mui/x-charts": "^6.18.3",
     "clipboard-copy": "^4.0.1",
     "react-modal": "^3.16.1"
   }
