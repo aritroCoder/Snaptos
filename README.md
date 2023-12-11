@@ -37,7 +37,8 @@ Aptos Wallet leverages a sophisticated Bidirectional LSTM model to predict the f
 3. **Start the Server:**
    ```bash
    cd server
-   npm start
+   yarn install
+   yarn start
    ```
 4. **Return to the Root Directory:**
    ```bash
