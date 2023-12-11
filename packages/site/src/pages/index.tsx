@@ -261,20 +261,20 @@ const Index = () => {
     return time;
   };
 
-  function shiftAndReplaceLast(jsonObj, newValue) {
-    const x = Object.values(jsonObj);
-    for(var i = 1; i < x.length; i++) {
-      x[i-1] = x[i];
-    }
-    
-    x[x.length-1] = newValue;
-    console.log(x);
-    console.log(x[x.length-3]);
-    const updatedJson = {};
-    x.forEach((value, index) => {
-      updatedJson[`price_${index}`] = value;
-    });
-    return updatedJson;
+  function shiftAndReplaceLast(jsonObject, newValue) {
+
+      const keys = Object.keys(jsonObject);
+
+      // Reverse cyclically shift the values
+      for (let i = 0; i < keys.length - 1; i++) {
+        jsonObject[keys[i]] = jsonObject[keys[i + 1]];
+      }
+
+      // Set the new value for the last key
+      jsonObject[keys[keys.length - 1]] = newValue;
+
+
+      return jsonObject;
   }
   let counter = 0; // Initialize counter to start from 0
   let newJSON ={}
