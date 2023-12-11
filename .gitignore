@@ -82,3 +82,5 @@ yarn.lock
 server/.yarn/
 
 packages/snap/snap.manifest.json
+
+__pycache__
