@@ -227,7 +227,10 @@ const Index = () => {
   const [txnHistory, setTxnHistory] = useState([]);
   const [txncCronJobActive, setTxnCronJobActive] = useState(false);
   const [isMainet, setIsMainnet] = useState(false);
-  const [valueInUSD, setValueInUSD] = useState(8);
+  const [valueInUSD, setValueInUSD] = useState(8.335);
+  const [trainingJSON,setTrainingJSON] = useState({});
+  const [forecastCronJobActive, setForecastCronJobActive] = useState(true)
+  const [predictedPrice, setpredictedPrice] = useState(valueInUSD)
 
   const milliToDate = (milli: any) => {
     const monthNames = [
@@ -257,6 +260,60 @@ const Index = () => {
       date.getFullYear();
     return time;
   };
+
+  function shiftAndReplaceLast(jsonObj, newValue) {
+    const x = Object.values(jsonObj);
+    for(var i = 1; i < x.length; i++) {
+      x[i-1] = x[i];
+    }
+    
+    x[x.length-1] = newValue;
+    console.log(x);
+    console.log(x[x.length-3]);
+    const updatedJson = {};
+    x.forEach((value, index) => {
+      updatedJson[`price_${index}`] = value;
+    });
+    return updatedJson;
+  }
+  let counter = 0; // Initialize counter to start from 0
+  let newJSON ={}
+if(forecastCronJobActive) {
+  setForecastCronJobActive(false);
+  setInterval(async () => {
+    const HOST = 'http://localhost:5500';
+    const price = await fetch(`${HOST}/aptToUsd`).then((res) => res.json());
+    console.log(price);
+    setValueInUSD(price.APT);
+    const p = price.APT
+    if (Object.keys(trainingJSON).length < 16) {
+      let priceString = `price_${counter}`;
+      trainingJSON[priceString] = price.APT;
+      setTrainingJSON(trainingJSON);
+      counter++;
+      console.log(trainingJSON);
+    } else if (Object.keys(trainingJSON).length === 16) {
+      const newJSON = shiftAndReplaceLast(trainingJSON, p);
+      setTrainingJSON(newJSON);
+      const fetchPredictedPrice = await fetch('http://localhost:9000/predict/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          newJSON
+        }),
+      }).then((res) => res.json());
+      console.log(fetchPredictedPrice);
+      setpredictedPrice(fetchPredictedPrice.price);
+      console.log(newJSON)
+    }
+  }, 6000);
+
+}
+  
+  
+  
 
   const handleOpen = () => {
     setOpen(true);
@@ -994,6 +1051,21 @@ const Index = () => {
                 style={{ textAlign: 'center' , marginTop: '10px'}}
               >
                 1 APT = {valueInUSD} USD
+              </Typography>
+      </Notice>
+      <Notice>
+        <p style={{
+                    font: 'Roboto',
+                    fontSize: '20px',
+                    fontWeight: 530,
+                    color: `${({ theme }) => theme.colors.error?.muted}`,
+                    padding: '0px 10px',
+                  }}>Predicted price for next minute </p>
+        <Typography
+                variant="h4"
+                style={{ textAlign: 'center' , marginTop: '10px'}}
+              >
+                1 APT = {predictedPrice} USD
               </Typography>
       </Notice>
     </Container>
