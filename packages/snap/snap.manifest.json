@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
+  "description": "A snap that adds Aptos wallet capabilities to Metamask",
   "proposedName": "SNAPTOS",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "2j8ikTTJ8ysCsFGLBmWd9yW9VG7QZvnG/WBy5qE32Ts=",
+    "shasum": "0sD9Hhfpf1S2/7hcTfMN7sFQ/vXv8+sCrMMcIKl/ZAU=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
