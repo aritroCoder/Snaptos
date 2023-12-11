@@ -9,6 +9,7 @@ import { connectSnap, getThemePreference, getSnap } from '../utils';
 import { HeaderButtons } from './Buttons';
 import { SnapLogo } from './SnapLogo';
 import { Toggle } from './Toggle';
+import { Network } from './Network';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -64,7 +65,7 @@ export const Header = ({
     }
   };
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedNetwork, setSelectedNetwork] = useState('mainnet');
+  const [selectedNetwork, setSelectedNetwork] = useState('devnet');
 
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,6 +79,7 @@ export const Header = ({
     setSelectedNetwork(network);
     handleDropdownClose();
   };
+  
   return (
     <HeaderWrapper>
       <LogoWrapper>
@@ -85,7 +87,7 @@ export const Header = ({
         <Title>SNAPTOS</Title>
       </LogoWrapper>
       <RightContainer>
-        <div
+        {/* <div
           style={{
             font: 'Roboto',
             fontSize: '1.6rem',
@@ -100,7 +102,6 @@ export const Header = ({
           }}
         >
           {selectedNetwork.toUpperCase()}{' '}
-          {/* Display the selected network in uppercase */}
           <ArrowDropDownCircleOutlinedIcon
             style={{
               fontSize: 15,
@@ -134,9 +135,9 @@ export const Header = ({
           >
             Devnet
           </MenuItem>
-                   
         </Menu>{' '}
-        <div style={{ marginRight: '20px' }} />
+        <div style={{ marginRight: '20px' }} /> */}
+        <Network/>
         <Toggle
           onToggle={handleToggleClick}
           defaultChecked={getThemePreference()}

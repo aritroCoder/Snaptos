@@ -13,8 +13,9 @@ export default async function transferCoin(
   to: string,
   amount: number,
   pk: string,
+  network: string
 ) {
-  const networkType = 'TESTNET';
+  const networkType = network.toUpperCase();
   const account = await getAccount();
   const txHash = await fetch(`${HOST}/transaction`, {
     method: 'POST',

@@ -55,9 +55,11 @@ import {
   LoginAccountButton,
   CreateAccountButton,
   SnapLogo,
+  CopyToClipboardButton
 } from '../components';
 import SendIcon from '@mui/icons-material/Send';
 import { SHA256 } from 'crypto-js';
+import {Network} from '../components';
 
 const Container = styled.div`
   display: flex;
@@ -225,6 +227,7 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [txnHistory, setTxnHistory] = useState([]);
   const [txncCronJobActive, setTxnCronJobActive] = useState(false);
+  const [isMainet, setIsMainnet] = useState(false);
 
   const milliToDate = (milli: any) => {
     const monthNames = [
@@ -277,7 +280,7 @@ const Index = () => {
 
   const transactionCronJob = () => {
     const interval = setInterval(async () => {
-      const getTxn = await sendTxnHistory();
+      const getTxn = await sendTxnHistory(selectedNetwork);
       setTxnHistory(getTxn.txnHistory);
     }, 5000);
     console.log(interval);
@@ -382,7 +385,7 @@ const Index = () => {
   };
   const handleSendGetAccount = async () => {
     try {
-      const accountinfo: any = await sendGetAccount(password);
+      const accountinfo: any = await sendGetAccount(password, selectedNetwork);
       const { accountInfo } = accountinfo;
       const { address, bal } = accountInfo;
       setAddress(address);
@@ -401,7 +404,7 @@ const Index = () => {
       const hashedPassword = SHA256(inputPassword).toString();
       const accountinfo: any = await sendGetData(hashedPassword);
       const { address } = accountinfo;
-      const bal = await sendGetBalance();
+      const bal = await sendGetBalance(selectedNetwork);
       setAddress(address);
       setBalance(bal);
       setShowCreateAccountCard(false);
@@ -415,8 +418,8 @@ const Index = () => {
   const handleCoinTransfer = async () => {
     closeSendModal();
     try {
-      await sendCoin(recipientAddress, sendAmount);
-      const updatedBalance = await sendGetBalance();
+      await sendCoin(recipientAddress, sendAmount , selectedNetwork);
+      const updatedBalance = await sendGetBalance(selectedNetwork);
       setBalance(updatedBalance);
     } catch (error) {
       console.error(error);
@@ -430,8 +433,8 @@ const Index = () => {
   }, [isCreatingAccount]);
   const handleFundMeWithFaucet = async () => {
     try {
-      await sendFundMe();
-      const updatedBalance = await sendGetBalance();
+      await sendFundMe(selectedNetwork);
+      const updatedBalance = await sendGetBalance(selectedNetwork);
       setBalance(updatedBalance);
     } catch (error) {
       console.error(error);
@@ -441,7 +444,7 @@ const Index = () => {
 
   const handleGetAllTransactions = async () => {
     try {
-      const getTxn = await sendTxnHistory();
+      const getTxn = await sendTxnHistory(selectedNetwork);
       setTxnHistory(getTxn.txnHistory);
       toggleOpen();
       if (!txncCronJobActive) {
@@ -457,7 +460,7 @@ const Index = () => {
   /*DROP-DOWN LOGIC*/
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedNetwork, setSelectedNetwork] = useState('mainnet');
+  const [selectedNetwork, setSelectedNetwork] = useState('testnet');
 
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -467,10 +470,17 @@ const Index = () => {
     setAnchorEl(null);
   };
 
-  const handleNetworkSelect = (network) => {
+  const handleNetworkSelect =  async (network) => {
     setSelectedNetwork(network);
     handleDropdownClose();
-    // Add logic here to handle the selected network (e.g., switch network configuration)
+    if(network === 'mainnet'){
+      setIsMainnet(true);
+    }
+    else{
+      setIsMainnet(false);
+      const updatedBalance = await sendGetBalance(network);
+      setBalance(updatedBalance);
+    }
   };
   return (
     <Container>
@@ -544,7 +554,7 @@ const Index = () => {
             margin="normal"
           />
           <TextField
-            label="Amount"
+            label="Amount (APT)"
             type="number"
             value={sendAmount}
             onChange={handleAmountChange}
@@ -723,7 +733,7 @@ const Index = () => {
                 }}
                 onClick={() => {
                   window.open(
-                    `https://explorer.aptoslabs.com/account/${address}?network=devnet`,
+                    `https://explorer.aptoslabs.com/account/${address}?network=${selectedNetwork}`,
                     '_blank',
                   );
                 }}
@@ -736,10 +746,7 @@ const Index = () => {
                     <Typography variant="body1">
                       {address ? address : 'Loading...'}
                     </Typography>
-                    <ContentCopyIcon
-                      style={{ marginLeft: '8px', cursor: 'pointer' }}
-                      onClick={() => {}}
-                    />
+                    <CopyToClipboardButton textToCopy={address} />
                   </div>
                 </AccountModalContent>
               </AccountInfoBox>
@@ -748,7 +755,7 @@ const Index = () => {
                   gutterBottom
                   style={{ textAlign: 'center' }}
                 >
-                  {balance / Math.pow(10, 8)} APT
+                  {isMainet? 0 : balance / Math.pow(10, 8)} APT
                 </Typography>
 
               <HorizontalButtonContainer>
@@ -773,7 +780,7 @@ const Index = () => {
                     <SendIcon style={{ marginRight: '5px' }} />
                     SEND
                   </Button>
-                  <Button
+                  {!isMainet && <Button
                     variant="contained"
                     onClick={handleFundMeWithFaucet}
                     style={{
@@ -796,7 +803,7 @@ const Index = () => {
                   >
                     <Faucet style={{ fill: 'white', marginRight: '5px' }} />
                     FAUCET
-                  </Button>
+                  </Button>}
                   <Button
                     variant="contained"
                     onClick={handleGetAllTransactions}
@@ -884,7 +891,7 @@ const Index = () => {
                 }}
                 onClick={() => {
                   window.open(
-                    `https://explorer.aptoslabs.com/txn/${txn.hash}?network=devnet`,
+                    `https://explorer.aptoslabs.com/txn/${txn.hash}?network=${selectedNetwork}`,
                     '_blank',
                   );
                 }}

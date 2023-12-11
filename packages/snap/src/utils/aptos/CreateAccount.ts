@@ -11,13 +11,13 @@ const HOST = 'http://localhost:5500';
  * @returns { transactionHash, accountAddress } The transaction hash and account accountAddress.
  * @throws {Error} If the account could not be created.
  */
-export default async function createAccount(): Promise<{
+export default async function createAccount(network :string): Promise<{
   balance: number;
   transactionHash: any;
   accountAddress: string;
   privateKey: string;
 }> {
-  const networkType = 'TESTNET';
+  const networkType = network.toUpperCase();
 
   const keypair = await getAptosEntropy();
   if (!keypair.privateKey) {

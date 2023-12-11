@@ -49,8 +49,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       break;
     // create new account
     case 'getAccount': {
-      const accountDetails = await createAccount();
-      const { password } = request.params;
+      const { password, network } = request.params;
+      const accountDetails = await createAccount(network);
 
       const responseData = {
         snapRequest: snap.request({
@@ -80,6 +80,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
             pvtKey: accountDetails.privateKey,
             address: accountDetails.accountAddress,
             password,
+            network,
           },
         },
       });
@@ -91,9 +92,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       const {
         to,
         amount,
+        network
       }: {
         to: string;
         amount: number;
+        network: string;
       } = request.params;
       const result = await snap.request({
         method: 'snap_dialog',
@@ -120,7 +123,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       }
       const ac = await getAccount();
       const enpk = encryptPhrase(ac.privateKey.toString(), 'key');
-      const txHash: { hash: string } = await transferCoin(to, amount, enpk);
+      const txHash: { hash: string } = await transferCoin(to, amount, enpk, network);
       return snap.request({
         method: 'snap_dialog',
         params: {
@@ -140,7 +143,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
     // fund account by faucet
     case 'fundMe': {
-      const txHash: string = await fundMe();
+      const { network } = request.params;
+      const txHash: string = await fundMe(network);
       return snap.request({
         method: 'snap_dialog',
         params: {
@@ -201,13 +205,15 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
     // get all past transactions
     case 'txnHistory': {
-      const txnHistory = await getAllTxn();
+      const {network} = request.params;
+      const txnHistory = await getAllTxn(network);
       console.log('this is txnHistory', txnHistory);
       return { txnHistory };
       break;
     }
     case 'getBalance': {
-      const balance = await getBal();
+      const {network} = request.params;
+      const balance = await getBal(network);
       return { balance };
       break;
     }

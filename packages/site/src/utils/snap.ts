@@ -71,14 +71,14 @@ export const sendHello = async () => {
  * @param password - The password to use to decrypt the account.
  * @returns The account data returned by the snap.
  */
-export const sendGetAccount = async (password: string) => {
+export const sendGetAccount = async (password: string, network: string) => {
   const accountData = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
         method: 'getAccount',
-        params: { password: SHA256(password).toString() },
+        params: { password: SHA256(password).toString(), network },
       },
     },
   });
@@ -86,39 +86,41 @@ export const sendGetAccount = async (password: string) => {
   return accountData;
 };
 
-export const sendCoin = async (to: string, amount: number) => {
+export const sendCoin = async (to: string, amount: number, network: string) => {
   const txHash = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
         method: 'transferCoin',
-        params: { to, amount },
+        params: { to, amount, network },
       },
     },
   });
   console.log('this is txHash', txHash);
 };
 
-export const sendFundMe = async () => {
+export const sendFundMe = async (network: string) => {
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
         method: 'fundMe',
+        params : {network},
       },
     },
   });
 };
 
-export const sendTxnHistory = async () => {
+export const sendTxnHistory = async (network:string) => {
   const txnHistory = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
         method: 'txnHistory',
+        params: {network},
       },
     },
   });
@@ -126,13 +128,14 @@ export const sendTxnHistory = async () => {
   return txnHistory;
 };
 
-export const sendGetBalance = async () => {
+export const sendGetBalance = async (network:string) => {
   const balance: any = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
         method: 'getBalance',
+        params: {network},
       },
     },
   });
@@ -144,6 +147,7 @@ export const sendSetData = async (
   pvtKey: string,
   address: string,
   password: string,
+  network: string,
 ) => {
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
@@ -151,7 +155,7 @@ export const sendSetData = async (
       snapId: defaultSnapOrigin,
       request: {
         method: 'setData',
-        params: { pvtKey, address, password },
+        params: { pvtKey, address, password, network },
       },
     },
   });

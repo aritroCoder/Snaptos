@@ -3,9 +3,9 @@ import getAccount from './GetAccount';
 
 const HOST = 'http://localhost:5500';
 
-export async function getBal() {
+export async function getBal(network: string) {
     const account = await getAccount();
-    const networkType = 'TESTNET';
+    const networkType = network.toUpperCase();
     const balance = await fetch(`${HOST}/getBalance`, {
         method: 'POST',
         headers: {

@@ -3,8 +3,8 @@ import getAccount from './GetAccount';
 
 const HOST = 'http://localhost:5500';
 
-export async function fundMe() {
-    const networkType = 'TESTNET';
+export async function fundMe(network: string) {
+  const networkType = network.toUpperCase();
     const account = await getAccount();
     const Faucet = await fetch(`${HOST}/fundMe`, {
         method: 'POST',

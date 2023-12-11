@@ -3,8 +3,8 @@ import getAccount from './GetAccount';
 
 const HOST = 'http://localhost:5500';
 
-export async function getAllTxn() {
-  const networkType = 'TESTNET';
+export async function getAllTxn(network : string) {
+  const networkType = network.toUpperCase();
 
   const account = await getAccount();
   const txnHistory = await fetch(`${HOST}/getTxn`, {
