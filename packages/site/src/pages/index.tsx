@@ -131,8 +131,7 @@ const Notice = styled.div`
   border-radius: ${({ theme }) => theme.radii.default};
   padding: 2.4rem;
   margin-top: 2.4rem;
-  max-width: 60rem;
-  width: 100%;
+  width: auto;
 
   & > * {
     margin: 0;
@@ -228,6 +227,7 @@ const Index = () => {
   const [txnHistory, setTxnHistory] = useState([]);
   const [txncCronJobActive, setTxnCronJobActive] = useState(false);
   const [isMainet, setIsMainnet] = useState(false);
+  const [valueInUSD, setValueInUSD] = useState(8);
 
   const milliToDate = (milli: any) => {
     const monthNames = [
@@ -549,7 +549,7 @@ const Index = () => {
             margin="normal"
           />
           <TextField
-            label="Amount (APT)"
+            label="Amount"
             type="number"
             value={sendAmount}
             onChange={handleAmountChange}
@@ -981,6 +981,21 @@ const Index = () => {
           </Paper>
         </>
       )}
+      <Notice>
+        <p style={{
+                    font: 'Roboto',
+                    fontSize: '20px',
+                    fontWeight: 530,
+                    color: `${({ theme }) => theme.colors.error?.muted}`,
+                    padding: '0px 10px',
+                  }}>Current APT Value in USD: </p>
+        <Typography
+                variant="h4"
+                style={{ textAlign: 'center' , marginTop: '10px'}}
+              >
+                1 APT = {valueInUSD} USD
+              </Typography>
+      </Notice>
     </Container>
 
     // </Container>
