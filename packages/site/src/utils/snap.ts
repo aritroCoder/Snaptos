@@ -139,7 +139,7 @@ export const sendGetBalance = async (network:string) => {
       },
     },
   });
-  console.log('this is balance', balance);
+  console.log('this is balance', balance, " network: ", network);
   return balance.balance;
 };
 

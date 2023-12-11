@@ -25,6 +25,8 @@ export default async function checkBalance(request:Request) {
     const aptos = new Aptos(aptosConfig);
     const accountCoinsData: GetAccountCoinsDataResponse = await aptos.getAccountCoinsData({accountAddress: request.address});
     console.log('this is accountCoinsData', accountCoinsData);
+    console.log({requestBody})
+    console.log('network: ', networkType)
 
     return accountCoinsData;
     

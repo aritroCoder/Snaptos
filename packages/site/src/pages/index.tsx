@@ -55,11 +55,11 @@ import {
   LoginAccountButton,
   CreateAccountButton,
   SnapLogo,
-  CopyToClipboardButton
+  CopyToClipboardButton,
 } from '../components';
 import SendIcon from '@mui/icons-material/Send';
 import { SHA256 } from 'crypto-js';
-import {Network} from '../components';
+import { Network } from '../components';
 
 const Container = styled.div`
   display: flex;
@@ -418,7 +418,7 @@ const Index = () => {
   const handleCoinTransfer = async () => {
     closeSendModal();
     try {
-      await sendCoin(recipientAddress, sendAmount , selectedNetwork);
+      await sendCoin(recipientAddress, sendAmount, selectedNetwork);
       const updatedBalance = await sendGetBalance(selectedNetwork);
       setBalance(updatedBalance);
     } catch (error) {
@@ -447,10 +447,6 @@ const Index = () => {
       const getTxn = await sendTxnHistory(selectedNetwork);
       setTxnHistory(getTxn.txnHistory);
       toggleOpen();
-      if (!txncCronJobActive) {
-        transactionCronJob();
-        setTxnCronJobActive(true);
-      }
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -470,13 +466,12 @@ const Index = () => {
     setAnchorEl(null);
   };
 
-  const handleNetworkSelect =  async (network) => {
+  const handleNetworkSelect = async (network: string) => {
     setSelectedNetwork(network);
     handleDropdownClose();
-    if(network === 'mainnet'){
+    if (network === 'mainnet') {
       setIsMainnet(true);
-    }
-    else{
+    } else {
       setIsMainnet(false);
       const updatedBalance = await sendGetBalance(network);
       setBalance(updatedBalance);
@@ -634,7 +629,7 @@ const Index = () => {
               justifyContent: 'flex-start',
               alignItems: 'center',
               position: 'relative',
-              width:'50%',
+              width: '50%',
             }}
           >
             {' '}
@@ -645,10 +640,10 @@ const Index = () => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '10px 0px',
-                background:'#F2F2F2',
+                background: '#F2F2F2',
                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
                 borderRadius: '15px 15px 0px 0px',
-                width:'100%',
+                width: '100%',
               }}
             >
               <div
@@ -751,15 +746,21 @@ const Index = () => {
                 </AccountModalContent>
               </AccountInfoBox>
               <Typography
-                  variant="h3"
-                  gutterBottom
-                  style={{ textAlign: 'center' }}
-                >
-                  {isMainet? 0 : balance / Math.pow(10, 8)} APT
-                </Typography>
+                variant="h3"
+                gutterBottom
+                style={{ textAlign: 'center' }}
+              >
+                {isMainet ? 0 : balance / Math.pow(10, 8)} APT
+              </Typography>
 
               <HorizontalButtonContainer>
-                <div style={{ display: 'flex', justifyContent:'space-evenly', width:'100%',}}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-evenly',
+                    width: '100%',
+                  }}
+                >
                   <Button
                     variant="contained"
                     onClick={openSendModal}
@@ -780,30 +781,32 @@ const Index = () => {
                     <SendIcon style={{ marginRight: '5px' }} />
                     SEND
                   </Button>
-                  {!isMainet && <Button
-                    variant="contained"
-                    onClick={handleFundMeWithFaucet}
-                    style={{
-                      width: '105px',
-                      height: '32px',
-                      borderRadius: '10px',
-                      font: 'Roboto',
-                      fontSize: '12px',
-                      fontWeight: '400',
-                      lineHeight: '18px',
-                      letterSpacing: '0em',
-                      textAlign: 'left',
-                      background: '#2F81FC',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '0',
-                    }}
-                  >
-                    <Faucet style={{ fill: 'white', marginRight: '5px' }} />
-                    FAUCET
-                  </Button>}
+                  {!isMainet && (
+                    <Button
+                      variant="contained"
+                      onClick={handleFundMeWithFaucet}
+                      style={{
+                        width: '105px',
+                        height: '32px',
+                        borderRadius: '10px',
+                        font: 'Roboto',
+                        fontSize: '12px',
+                        fontWeight: '400',
+                        lineHeight: '18px',
+                        letterSpacing: '0em',
+                        textAlign: 'left',
+                        background: '#2F81FC',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '0',
+                      }}
+                    >
+                      <Faucet style={{ fill: 'white', marginRight: '5px' }} />
+                      FAUCET
+                    </Button>
+                  )}
                   <Button
                     variant="contained"
                     onClick={handleGetAllTransactions}
@@ -831,7 +834,17 @@ const Index = () => {
                   </Button>
                 </div>
                 {!open && (
-                  <p style={{color: '#7F7F7F', fontSize: '1.4rem', fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}>Click on transaction history to view all transactions.</p>
+                  <p
+                    style={{
+                      color: '#7F7F7F',
+                      fontSize: '1.4rem',
+                      fontFamily: 'Roboto',
+                      fontWeight: '400',
+                      wordWrap: 'break-word',
+                    }}
+                  >
+                    Click on transaction history to view all transactions.
+                  </p>
                 )}
                 {open && txnHistory.length > 0 && (
                   <div
@@ -839,7 +852,7 @@ const Index = () => {
                       overflowX: 'auto',
                       overflowY: 'scroll',
                       maxHeight: '480px',
-                      width:'100%',
+                      width: '100%',
                     }}
                   >
                     <TableContainer component={Paper}>
@@ -881,21 +894,21 @@ const Index = () => {
                                 {milliToDate(txn.timestamp)}
                               </TableCell>
                               <TableCell>
-                              <OpenInNewIcon
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  color: '#434343',
-                  marginRight: '10px',
-                  cursor: 'pointer',
-                }}
-                onClick={() => {
-                  window.open(
-                    `https://explorer.aptoslabs.com/txn/${txn.hash}?network=${selectedNetwork}`,
-                    '_blank',
-                  );
-                }}
-              />
+                                <OpenInNewIcon
+                                  style={{
+                                    width: '20px',
+                                    height: '20px',
+                                    color: '#434343',
+                                    marginRight: '10px',
+                                    cursor: 'pointer',
+                                  }}
+                                  onClick={() => {
+                                    window.open(
+                                      `https://explorer.aptoslabs.com/txn/${txn.hash}?network=${selectedNetwork}`,
+                                      '_blank',
+                                    );
+                                  }}
+                                />
                               </TableCell>
                             </TableRow>
                           ))}
