@@ -502,7 +502,7 @@ if(forecastCronJobActive) {
   const handleGetAllTransactions = async () => {
     try {
       const getTxn = await sendTxnHistory(selectedNetwork);
-      setTxnHistory(getTxn.txnHistory);
+      setTxnHistory(getTxn.txnHistory.reverse());
       toggleOpen();
     } catch (error) {
       console.error(error);
@@ -816,7 +816,7 @@ if(forecastCronJobActive) {
                     display: 'flex',
                     justifyContent: 'space-evenly',
                     width: '100%',
-                    paddingBottom: '2rem'
+                    paddingBottom: '2rem',
                   }}
                 >
                   <Button
@@ -1039,19 +1039,23 @@ if(forecastCronJobActive) {
         </>
       )}
       <Notice>
-        <p style={{
-                    font: 'Roboto',
-                    fontSize: '20px',
-                    fontWeight: 530,
-                    color: `${({ theme }) => theme.colors.error?.muted}`,
-                    padding: '0px 10px',
-                  }}>Current APT Value in USD: </p>
+        <p
+          style={{
+            font: 'Roboto',
+            fontSize: '20px',
+            fontWeight: 530,
+            color: `${({ theme }) => theme.colors.error?.muted}`,
+            padding: '0px 10px',
+          }}
+        >
+          Current APT Value in USD:{' '}
+        </p>
         <Typography
-                variant="h4"
-                style={{ textAlign: 'center' , marginTop: '10px'}}
-              >
-                1 APT = {valueInUSD} USD
-              </Typography>
+          variant="h4"
+          style={{ textAlign: 'center', marginTop: '10px' }}
+        >
+          1 APT = {valueInUSD} USD
+        </Typography>
       </Notice>
       <Notice>
         <p style={{
