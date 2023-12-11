@@ -69,14 +69,15 @@ Congratulations! You are now ready to experience the power of Snaptos. Access yo
 
 - **On-chain Account Creation:** Behind the scenes, Aptos Wallet leverages smart contract interactions to securely and efficiently create Aptos accounts directly on-chain.
 
-- **Advanced APT to USD prediction model:** The forecasting engine is built using a Bidirectional LSTM model, which is trained on historical data to predict future Aptos price movements. We have trained the model on more than 500 continuous data points which we scraped ourselves from the internet through multiple sources/price feeds.
-
 ## Solution Architecture
 ![Snaptos Architecture](./assets/APTOS_architecture.png)
 The main components of the solution are:
 - **Metamask Snap:** The Metamask Snap is a browser extension that allows users to interact with the Aptos blockchain. It is a lightweight extension of the Metamask browser extension and is built using Typescript. The Metamask Snap is responsible for generating the Aptos wallet keypair using the seed phrase associated with ethereum. It uses metamask's `snap_getBip32Entropy` method to generate the `rootNode` by using the derive path `[m, 44', 637']` and uses this to derive the keypair using the [SLIP algorithm](https://github.com/satoshilabs/slips/blob/master/slip-0010.md). It also stores the key pair in the secure storage provided by metamask, so that on subsequent logins with the password, it can be fetched directly. The snap also acts as the interface through which operations like coin transfer, faucet funding, viewing transaction history, etc can be done.
 
 - **Proxy backend server:** As Metamask Snaps operate in a sandboxed environment, they are not able to make requests to external APIs. Thus, we have created a proxy backend server that acts as a bridge between the snap and the external APIs. The snap makes requests to the proxy server, which then forwards the request to the external API and returns the response back to the snap. The proxy server is built using Node.js and Express.js in Typescript. It also acts as the interface between the snap and the forecasting engine. The proxy server uses the cutting-edge [aptos-ts-sdk](https://github.com/aptos-labs/aptos-ts-sdk) to interact with the Aptos blockchain. The proxy server performs important functionalities like faucet funding, coin transfer, transaction history, account balance etc. It also provides the snap with real time APT to USD conversion rates by making requests to multiple coin feeds (discussed below).
+
+   Snap and the proxy server interact with each other as explained in the below UML diagram:
+   ![Snaptos UML](./assets/Aptos-UML.png)
 
 - **BiLSTM Forecasting Model:** The forecasting engine is built using a Bidirectional LSTM(Long Short Term Memory) model, which is trained on historical data to predict future Aptos price movements. We have trained the model on more than 500 continuous data points which we scraped ourselves from the internet through multiple sources/price feeds. The different data feeds we used are:
    - Binance: https://www.binance.com/api/v3/ticker/price?symbol=APTUSDT
@@ -108,7 +109,7 @@ The main components of the solution are:
 - Although RNNs and CNNs were meant for time series data, they usually falter at remembering long term dependencies in the data. LSTMs and GRUs were made to overcome this limitation and thus here we have used LSTMs, which are a superior version of RNNs.
 
 ## Authors
-This project has been made for 12th Inter IIT Tech meet 2023 by Insitute/Team id 46.
+This project has been made for 12th Inter IIT Tech meet 2023 by Insitute/Team id 46. It will be made open source under the MIT License after the competition ends.
 
 ## References
 - Patel, Mohil Maheshkumar, et al. "A deep learning-based cryptocurrency price prediction scheme for financial institutions." Journal of information security and applications 55 (2020): 102583. https://doi.org/10.1002/isaf.1488
