@@ -98,9 +98,9 @@ The main components of the solution are:
    - **Learning rate:** 0.001
    - **Lookback period:** 16 time units
 
-   The model, when trained, gives us a training error of 0.01 and a validation error in the range of 0.01 to 0.03 (MSE Loss).
+   The model is written using the [Pytorch](https://pytorch.org/) library to implement the complex neural architecture described above. When trained, the model gives us a training error of 0.01 and a validation error in the range of 0.01 to 0.03 (MSE Loss), which is a very good score for time series prediction datasets.
 
-   The entire forcasting model is dockerized to avoid installing all the libraries manually and thus provides a fast and convinient way to deploy the solution.
+   The entire forcasting model is dockerized to avoid installing all the libraries manually and thus provides a fast and convenient way to deploy the solution.
 - **Frontend Client:** The frontend client is built using React.js and Typescript. It is responsible for providing the user with a seamless and intuitive experience. It shows the account address, user's balance, and provides the user with the option to transfer Aptos to other accounts. It is responsible for fetching the real time APT to USD conversion rates from the proxy server and displaying it to the user along with forecasting data. It also fetches the transaction history from the proxy server, provides the user with the option to create an Aptos account on-chain, allows switching between mainnet, testnet and devnet, and also provides the user with the option to fund their account with test and dev Aptos using the faucet. 
 
 ## Why LSTM?
