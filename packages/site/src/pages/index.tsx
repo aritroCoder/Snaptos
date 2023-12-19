@@ -529,8 +529,18 @@ if(forecastCronJobActive) {
       setIsMainnet(true);
     } else {
       setIsMainnet(false);
-      const updatedBalance = await sendGetBalance(network);
-      setBalance(updatedBalance);
+      try{
+        const updatedBalance = await sendGetBalance(network);
+        setBalance(updatedBalance);
+      }
+      catch (error){
+        const accountinfo: any = await sendGetAccount(password, network);
+        const { accountInfo } = accountinfo;
+        const { address, bal } = accountInfo;
+        setAddress(address);
+        setBalance(bal);
+      }
+      
     }
   };
   return (
