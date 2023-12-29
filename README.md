@@ -109,6 +109,10 @@ The main components of the solution are:
 - Given the highly volatile nature of the crypto market, we need a model that can capture the non-linearities and complexities of the data. Simple statistical algorithms like ARIMA and SARIMA are not suitable for this task as they are not able to capture the non-linearities and complexities of the data. CNNs, RNNs and their variations have proved to be very effective in forecasting complex time series data. We have used LSTM as it is a very powerful variation of RNNs and is able to capture long term dependencies in the data. We have used a Bidirectional LSTM as it is able to capture the dependencies in both the directions of the time series data.
 - Although RNNs and CNNs were meant for time series data, they usually falter at remembering long term dependencies in the data. LSTMs and GRUs were made to overcome this limitation and thus here we have used LSTMs, which are a superior version of RNNs.
 
+## Demo
+
+https://github.com/aritroCoder/Snaptos/assets/95216822/aef48482-29df-4ceb-9dd1-dfdb8b6608ea
+
 ## Authors
 This project has been made for 12th Inter IIT Tech meet 2023 by Insitute/Team id 46. It will be made open source under the MIT License after the competition ends.
 
